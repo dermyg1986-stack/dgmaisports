@@ -6,12 +6,12 @@ import styles from "./page.module.css";
 type Message = { role: "user" | "assistant"; content: string };
 
 const QUICK_PROMPTS = [
-  { label: "Session Plan", text: "Create a 90-minute training session for a semi-professional squad focused on pressing and maintaining a high defensive line." },
-  { label: "Match Prep", text: "Help me prepare a match-day plan for Sunday. We're playing a team that sits deep and hits on the counter." },
-  { label: "Drill Ideas", text: "Suggest 3 drills to improve forward passing and combination play in tight spaces for under-16 players." },
-  { label: "Player Analysis", text: "How should I assess a central defender's decision-making under pressure and give constructive feedback in a 1-to-1 session?" },
-  { label: "Recovery Week", text: "Design a recovery and regeneration week for players after a heavy fixture run of 3 games in 7 days." },
-  { label: "Set Pieces", text: "Give me 2 corner routines — one attacking near post, one far post — with positioning described in text." },
+  { label: "Pre-Match Meal", text: "Suggest a high-carb pre-match meal I can prepare 3 hours before kick-off for a group of 15 adult footballers." },
+  { label: "Recovery Recipe", text: "Give me a high-protein post-workout recovery meal that I can make in under 20 minutes." },
+  { label: "Weekly Meal Plan", text: "Create a 5-day healthy meal plan for an athlete in a heavy training week — breakfast, lunch, and dinner." },
+  { label: "Healthy Snacks", text: "Suggest 5 nutritious snacks I can prep on Sunday to fuel training sessions throughout the week." },
+  { label: "Vegan Options", text: "I need a high-protein vegan dinner recipe suitable for a strength and conditioning athlete." },
+  { label: "Weight Management", text: "Design a satisfying but calorie-controlled dinner under 600 kcal that still supports muscle maintenance." },
 ];
 
 function MarkdownText({ text }: { text: string }) {
@@ -44,7 +44,7 @@ function formatInline(text: string): string {
     .replace(/\n/g, "<br/>");
 }
 
-export default function Home() {
+export default function RecipesPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -67,7 +67,7 @@ export default function Home() {
     setMessages((prev) => [...prev, assistantMsg]);
 
     try {
-      const res = await fetch("/api/chat", {
+      const res = await fetch("/api/recipes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ messages: newMessages }),
@@ -114,15 +114,17 @@ export default function Home() {
   return (
     <div className={styles.layout}>
       <header className={styles.header}>
-        <div className={styles.logo}>
-          <span className={styles.logoIcon}>⚽</span>
-          <div>
-            <span className={styles.logoTitle}>DGM AI Sports</span>
-            <span className={styles.logoSub}>Coach Assistant</span>
+        <div className={styles.headerLeft}>
+          <div className={styles.logo}>
+            <span className={styles.logoIcon}>🥗</span>
+            <div>
+              <span className={styles.logoTitle}>DGM AI Sports</span>
+              <span className={styles.logoSub}>Recipe & Nutrition Assistant</span>
+            </div>
           </div>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-          <Link href="/recipes" style={{ fontSize: "0.78rem", color: "var(--text-muted)", textDecoration: "none", padding: "5px 12px", border: "1px solid var(--border)", borderRadius: "20px", background: "var(--surface2)" }}>🥗 Recipe Assistant</Link>
+        <div className={styles.headerRight}>
+          <Link href="/" className={styles.navLink}>⚽ Coach Assistant</Link>
           <span className={styles.badge}>Powered by Claude Opus 4.8</span>
         </div>
       </header>
@@ -130,10 +132,10 @@ export default function Home() {
       <main className={styles.main}>
         {messages.length === 0 ? (
           <div className={styles.welcome}>
-            <div className={styles.welcomeIcon}>🏆</div>
-            <h1 className={styles.welcomeTitle}>Your AI Coaching Assistant</h1>
+            <div className={styles.welcomeIcon}>🥦</div>
+            <h1 className={styles.welcomeTitle}>Your AI Nutrition Assistant</h1>
             <p className={styles.welcomeText}>
-              Plan sessions, prepare for matches, design drills, and analyse player performance — all in one place.
+              Get personalised recipes, meal plans, and sports nutrition advice to fuel performance and support healthy eating goals.
             </p>
             <div className={styles.quickGrid}>
               {QUICK_PROMPTS.map((q) => (
@@ -177,7 +179,7 @@ export default function Home() {
             value={input}
             onChange={(e) => { setInput(e.target.value); autoResize(); }}
             onKeyDown={handleKeyDown}
-            placeholder="Ask your coaching assistant… (Enter to send, Shift+Enter for new line)"
+            placeholder="Ask about recipes, nutrition, meal plans… (Enter to send, Shift+Enter for new line)"
             rows={1}
             disabled={loading}
           />
