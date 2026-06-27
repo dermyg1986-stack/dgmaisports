@@ -1,6 +1,5 @@
 "use client";
 import { useState, useRef, useEffect, useCallback } from "react";
-import Link from "next/link";
 import styles from "./page.module.css";
 
 type Message = { role: "user" | "assistant"; content: string };
@@ -121,10 +120,7 @@ export default function Home() {
             <span className={styles.logoSub}>Coach Assistant</span>
           </div>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-          <Link href="/recipes" style={{ fontSize: "0.78rem", color: "var(--text-muted)", textDecoration: "none", padding: "5px 12px", border: "1px solid var(--border)", borderRadius: "20px", background: "var(--surface2)" }}>🥗 Recipe Assistant</Link>
-          <span className={styles.badge}>Powered by Claude Opus 4.8</span>
-        </div>
+        <span className={styles.badge}>Powered by Claude Opus 4.8</span>
       </header>
 
       <main className={styles.main}>

@@ -1,6 +1,5 @@
 "use client";
 import { useState, useRef, useEffect, useCallback } from "react";
-import Link from "next/link";
 import styles from "./page.module.css";
 
 type Message = { role: "user" | "assistant"; content: string };
@@ -114,19 +113,14 @@ export default function RecipesPage() {
   return (
     <div className={styles.layout}>
       <header className={styles.header}>
-        <div className={styles.headerLeft}>
-          <div className={styles.logo}>
-            <span className={styles.logoIcon}>🥗</span>
-            <div>
-              <span className={styles.logoTitle}>DGM AI Sports</span>
-              <span className={styles.logoSub}>Recipe & Nutrition Assistant</span>
-            </div>
+        <div className={styles.logo}>
+          <span className={styles.logoIcon}>🥗</span>
+          <div>
+            <span className={styles.logoTitle}>DGM AI Sports</span>
+            <span className={styles.logoSub}>Recipe & Nutrition Assistant</span>
           </div>
         </div>
-        <div className={styles.headerRight}>
-          <Link href="/" className={styles.navLink}>⚽ Coach Assistant</Link>
-          <span className={styles.badge}>Powered by Claude Opus 4.8</span>
-        </div>
+        <span className={styles.badge}>Powered by Claude Opus 4.8</span>
       </header>
 
       <main className={styles.main}>

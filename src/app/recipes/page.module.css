@@ -16,8 +16,6 @@
   background: var(--surface);
   flex-shrink: 0;
 }
-.headerLeft { display: flex; align-items: center; }
-.headerRight { display: flex; align-items: center; gap: 12px; }
 .logo { display: flex; align-items: center; gap: 10px; }
 .logoIcon { font-size: 1.6rem; }
 .logoTitle { display: block; font-weight: 700; font-size: 1rem; color: var(--text); }
@@ -30,18 +28,6 @@
   padding: 4px 10px;
   border-radius: 20px;
 }
-.navLink {
-  font-size: 0.78rem;
-  color: var(--text-muted);
-  text-decoration: none;
-  padding: 5px 12px;
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  background: var(--surface2);
-  transition: color 0.15s, border-color 0.15s;
-}
-.navLink:hover { color: var(--text); border-color: #22c55e; }
-
 /* Main */
 .main { flex: 1; overflow-y: auto; padding: 0 20px; }
 
