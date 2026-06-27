@@ -17,8 +17,8 @@ How to respond:
 - Use structured formats (numbered steps, bullet points, tables) for plans and drills.
 - Ask clarifying questions if the sport, age group, ability level, or context is unclear.
 - Always consider player welfare and safe training practices.
-- Adapt to the sport (football, rugby, basketball, athletics, cricket, etc.) when specified.
-- Use UK English and UK football terminology (pitch, strip, match day, etc.) where appropriate.`;
+- Adapt to the sport and code of play when specified by the coach.
+- Use UK English and standard coaching terminology where appropriate.`;
 
 export async function POST(request: Request) {
   const { messages } = await request.json() as { messages: { role: "user" | "assistant"; content: string }[] };

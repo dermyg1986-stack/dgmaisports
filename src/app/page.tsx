@@ -5,12 +5,12 @@ import styles from "./page.module.css";
 type Message = { role: "user" | "assistant"; content: string };
 
 const QUICK_PROMPTS = [
-  { label: "Session Plan", text: "Create a 90-minute training session for a semi-professional football squad focused on pressing and high defensive line." },
+  { label: "Session Plan", text: "Create a 90-minute training session for a semi-professional squad focused on pressing and maintaining a high defensive line." },
   { label: "Match Prep", text: "Help me prepare a match-day plan for Sunday. We're playing a team that sits deep and hits on the counter." },
   { label: "Drill Ideas", text: "Suggest 3 drills to improve forward passing and combination play in tight spaces for under-16 players." },
-  { label: "Player Analysis", text: "How should I assess a centre-back's decision-making under pressure and give constructive feedback in a 1-to-1 session?" },
+  { label: "Player Analysis", text: "How should I assess a central defender's decision-making under pressure and give constructive feedback in a 1-to-1 session?" },
   { label: "Recovery Week", text: "Design a recovery and regeneration week for players after a heavy fixture run of 3 games in 7 days." },
-  { label: "Set Pieces", text: "Give me 2 corner kick routines — one attacking near post, one far post — with positioning diagrams described in text." },
+  { label: "Set Pieces", text: "Give me 2 corner routines — one attacking near post, one far post — with positioning described in text." },
 ];
 
 function MarkdownText({ text }: { text: string }) {
