@@ -4,6 +4,42 @@ import styles from "./page.module.css";
 
 type Message = { role: "user" | "assistant"; content: string };
 
+const LANGUAGES = [
+  { code: "en-GB", label: "English (UK)" },
+  { code: "en-US", label: "English (US)" },
+  { code: "fr-FR", label: "Français" },
+  { code: "es-ES", label: "Español" },
+  { code: "de-DE", label: "Deutsch" },
+  { code: "it-IT", label: "Italiano" },
+  { code: "pt-BR", label: "Português" },
+  { code: "nl-NL", label: "Nederlands" },
+  { code: "pl-PL", label: "Polski" },
+  { code: "ru-RU", label: "Русский" },
+  { code: "ar-SA", label: "العربية" },
+  { code: "zh-CN", label: "中文 (简体)" },
+  { code: "zh-TW", label: "中文 (繁體)" },
+  { code: "ja-JP", label: "日本語" },
+  { code: "ko-KR", label: "한국어" },
+  { code: "hi-IN", label: "हिन्दी" },
+  { code: "tr-TR", label: "Türkçe" },
+  { code: "sv-SE", label: "Svenska" },
+  { code: "da-DK", label: "Dansk" },
+  { code: "fi-FI", label: "Suomi" },
+  { code: "nb-NO", label: "Norsk" },
+  { code: "cs-CZ", label: "Čeština" },
+  { code: "ro-RO", label: "Română" },
+  { code: "hu-HU", label: "Magyar" },
+  { code: "el-GR", label: "Ελληνικά" },
+  { code: "he-IL", label: "עברית" },
+  { code: "id-ID", label: "Bahasa Indonesia" },
+  { code: "ms-MY", label: "Bahasa Melayu" },
+  { code: "th-TH", label: "ภาษาไทย" },
+  { code: "vi-VN", label: "Tiếng Việt" },
+  { code: "uk-UA", label: "Українська" },
+  { code: "af-ZA", label: "Afrikaans" },
+  { code: "sw-KE", label: "Kiswahili" },
+];
+
 const QUICK_PROMPTS = [
   { label: "Quick Dinner", text: "Give me a healthy, balanced dinner recipe I can make in under 30 minutes with simple ingredients." },
   { label: "Weekly Meal Plan", text: "Create a 7-day healthy meal plan with breakfast, lunch, and dinner — I want variety and simple cooking." },
@@ -118,7 +154,7 @@ type SpeechRecognitionCtor = new () => {
   stop: () => void;
 };
 
-function useVoiceInput(onResult: (text: string) => void) {
+function useVoiceInput(onResult: (text: string) => void, lang: string) {
   const [listening, setListening] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const recognitionRef = useRef<any>(null);
@@ -127,7 +163,7 @@ function useVoiceInput(onResult: (text: string) => void) {
     if (typeof window === "undefined") return;
     const w = window as typeof window & { SpeechRecognition?: SpeechRecognitionCtor; webkitSpeechRecognition?: SpeechRecognitionCtor };
     const SR = w.SpeechRecognition || w.webkitSpeechRecognition;
-    if (!SR) { alert("Your browser doesn't support voice input. Try Chrome."); return; }
+    if (!SR) { alert("Voice input is not supported in this browser. Please use Chrome or Edge."); return; }
 
     if (listening) {
       recognitionRef.current?.stop();
@@ -138,14 +174,14 @@ function useVoiceInput(onResult: (text: string) => void) {
     const rec = new SR();
     rec.continuous = false;
     rec.interimResults = false;
-    rec.lang = "en-GB";
+    rec.lang = lang;
     rec.onresult = (e) => { onResult(e.results[0][0].transcript); };
     rec.onend = () => setListening(false);
     rec.onerror = () => setListening(false);
     recognitionRef.current = rec;
     rec.start();
     setListening(true);
-  }, [listening, onResult]);
+  }, [listening, lang, onResult]);
 
   return { listening, toggle };
 }
@@ -157,6 +193,11 @@ export default function RecipesPage() {
   const [loading, setLoading] = useState(false);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [editText, setEditText] = useState("");
+  const [voiceLang, setVoiceLang] = useState(() =>
+    typeof navigator !== "undefined"
+      ? LANGUAGES.find((l) => navigator.language.startsWith(l.code.split("-")[0]))?.code ?? "en-GB"
+      : "en-GB"
+  );
   const bottomRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const editRef = useRef<HTMLTextAreaElement>(null);
@@ -238,7 +279,7 @@ export default function RecipesPage() {
   const { listening, toggle: toggleVoice } = useVoiceInput((transcript) => {
     setInput((prev) => (prev ? prev + " " + transcript : transcript));
     textareaRef.current?.focus();
-  });
+  }, voiceLang);
 
   const hasMeaningfulContent = messages.some((m) => m.role === "assistant" && m.content.length > 50);
 
@@ -339,13 +380,26 @@ export default function RecipesPage() {
           </div>
         )}
         <div className={styles.inputRow}>
-          <button
-            className={`${styles.voiceBtn} ${listening ? styles.voiceBtnActive : ""}`}
-            onClick={toggleVoice}
-            title={listening ? "Stop listening" : "Voice input"}
-          >
-            {listening ? "🔴" : "🎤"}
-          </button>
+          <div className={styles.voiceGroup}>
+            <button
+              className={`${styles.voiceBtn} ${listening ? styles.voiceBtnActive : ""}`}
+              onClick={toggleVoice}
+              title={listening ? "Stop listening" : "Voice input"}
+            >
+              {listening ? "🔴" : "🎤"}
+            </button>
+            <select
+              className={styles.langSelect}
+              value={voiceLang}
+              onChange={(e) => setVoiceLang(e.target.value)}
+              title="Voice language"
+              disabled={listening}
+            >
+              {LANGUAGES.map((l) => (
+                <option key={l.code} value={l.code}>{l.label}</option>
+              ))}
+            </select>
+          </div>
           <textarea
             ref={textareaRef}
             className={styles.textarea}

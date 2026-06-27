@@ -234,6 +234,30 @@
 
 .inputRow { display: flex; gap: 8px; align-items: flex-end; }
 
+/* Voice group: mic + language picker */
+.voiceGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.langSelect {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-muted);
+  font-size: 0.65rem;
+  padding: 2px 4px;
+  outline: none;
+  cursor: pointer;
+  max-width: 80px;
+  transition: border-color 0.15s;
+}
+.langSelect:focus { border-color: #22c55e; }
+.langSelect:disabled { opacity: 0.5; cursor: not-allowed; }
+
 /* Voice button */
 .voiceBtn {
   flex-shrink: 0;
