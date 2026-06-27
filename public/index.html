@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>After Six — a weeknight recipe membership</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F4F0E6;
+    --paper-2:#FCFAF3;
+    --ink:#211E18;
+    --ink-soft:#6A6356;
+    --green:#2E4733;
+    --green-deep:#1D2F22;
+    --green-soft:#41603F;
+    --saffron:#DB9A23;
+    --saffron-soft:#F0D596;
+    --line:#E0D9C8;
+    --line-strong:#CFC6B0;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Newsreader",Georgia,serif;
+    font-size:18px;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--saffron-soft);color:var(--ink)}
+
+  .wrap{max-width:1120px;margin:0 auto;padding:0 28px}
+
+  /* ---- top bar ---- */
+  .topbar{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:22px 0;
+  }
+  .mark{
+    font-family:"Bricolage Grotesque",sans-serif;
+    font-weight:800;font-size:21px;letter-spacing:-.01em;
+    text-transform:uppercase;color:var(--green);
+    display:flex;align-items:baseline;gap:8px;
+  }
+  .mark span{
+    font-family:"Space Mono",monospace;font-weight:700;font-size:12px;
+    color:var(--saffron);letter-spacing:.05em;
+  }
+  .topnav{display:flex;gap:26px;font-family:"Space Mono",monospace;font-size:13px;text-transform:uppercase;letter-spacing:.04em}
+  .topnav a{color:var(--ink-soft);text-decoration:none;padding-bottom:2px;border-bottom:1.5px solid transparent}
+  .topnav a:hover,.topnav a:focus-visible{color:var(--ink);border-color:var(--saffron)}
+
+  /* ---- hero ---- */
+  .hero{
+    background:var(--green);
+    color:var(--paper-2);
+    border-radius:18px;
+    padding:64px 56px 56px;
+    position:relative;overflow:hidden;
+    margin-bottom:14px;
+  }
+  .hero-eyebrow{
+    font-family:"Space Mono",monospace;font-size:13px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--saffron);margin-bottom:22px;
+  }
+  .hero h1{
+    font-family:"Bricolage Grotesque",sans-serif;
+    font-weight:800;line-height:.98;letter-spacing:-.025em;
+    font-size:clamp(44px,7vw,82px);
+    max-width:14ch;
+  }
+  .hero h1 em{font-style:normal;color:var(--saffron)}
+  .hero p{
+    margin-top:24px;max-width:46ch;font-size:20px;
+    color:rgba(252,250,243,.82);
+  }
+  .hero-clock{
+    position:absolute;right:-40px;top:-40px;width:240px;height:240px;
+    border:2px solid rgba(219,154,35,.35);border-radius:50%;
+    display:grid;place-items:center;pointer-events:none;
+  }
+  .hero-clock::before{
+    content:"";position:absolute;width:170px;height:170px;
+    border:2px solid rgba(219,154,35,.22);border-radius:50%;
+  }
+  .hero-clock b{
+    font-family:"Space Mono",monospace;font-weight:700;
+    font-size:30px;color:var(--saffron);letter-spacing:.04em;
+  }
+
+  /* ---- intro strip ---- */
+  .strip{
+    display:flex;flex-wrap:wrap;gap:8px 30px;align-items:center;
+    padding:18px 0 6px;
+    font-family:"Space Mono",monospace;font-size:13px;
+    color:var(--ink-soft);letter-spacing:.02em;
+  }
+  .strip b{color:var(--green-soft)}
+
+  /* ---- category nav ---- */
+  .catnav{
+    position:sticky;top:0;z-index:30;
+    background:var(--paper);
+    border-bottom:1px solid var(--line);
+    display:flex;gap:8px;flex-wrap:wrap;
+    padding:14px 0;margin-top:8px;
+  }
+  .catnav a{
+    font-family:"Space Mono",monospace;font-size:12.5px;text-transform:uppercase;
+    letter-spacing:.04em;text-decoration:none;color:var(--ink-soft);
+    border:1px solid var(--line-strong);border-radius:999px;
+    padding:7px 15px;background:var(--paper-2);transition:.15s;
+  }
+  .catnav a:hover,.catnav a:focus-visible{
+    color:var(--paper-2);background:var(--green);border-color:var(--green);
+  }
+
+  /* ---- section headers ---- */
+  .section{padding:46px 0 8px}
+  .section-head{display:flex;align-items:baseline;gap:16px;margin-bottom:26px}
+  .section-num{
+    font-family:"Space Mono",monospace;font-size:13px;font-weight:700;
+    color:var(--saffron);letter-spacing:.05em;
+  }
+  .section h2{
+    font-family:"Bricolage Grotesque",sans-serif;font-weight:800;
+    font-size:clamp(26px,4vw,38px);letter-spacing:-.02em;color:var(--green);
+  }
+  .section-head .rule{flex:1;height:1px;background:var(--line-strong)}
+
+  /* ---- grid + cards ---- */
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .card{
+    background:var(--paper-2);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:22px 22px 20px;
+    cursor:pointer;text-align:left;
+    display:flex;flex-direction:column;gap:14px;
+    font:inherit;color:inherit;width:100%;
+    transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;
+  }
+  .card:hover,.card:focus-visible{
+    transform:translateY(-3px);
+    border-color:var(--line-strong);
+    box-shadow:0 14px 34px -22px rgba(33,30,24,.5);
+    outline:none;
+  }
+  .card:focus-visible{box-shadow:0 0 0 2px var(--saffron)}
+  .card-cat{
+    font-family:"Space Mono",monospace;font-size:11.5px;text-transform:uppercase;
+    letter-spacing:.08em;color:var(--saffron);
+  }
+  .card h3{
+    font-family:"Bricolage Grotesque",sans-serif;font-weight:600;
+    font-size:24px;line-height:1.08;letter-spacing:-.015em;color:var(--ink);
+  }
+  .card p{font-size:16px;color:var(--ink-soft);line-height:1.45;flex:1}
+  .spec{
+    display:flex;gap:18px;padding-top:14px;border-top:1px solid var(--line);
+    font-family:"Space Mono",monospace;font-size:12px;color:var(--ink-soft);
+  }
+  .spec b{display:block;color:var(--green-soft);font-size:14px;letter-spacing:-.01em}
+  .spec i{font-style:normal;font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;opacity:.7}
+
+  /* ---- modal ---- */
+  .overlay{
+    position:fixed;inset:0;z-index:100;
+    background:rgba(29,47,34,.55);backdrop-filter:blur(3px);
+    display:none;align-items:flex-start;justify-content:center;
+    padding:40px 20px;overflow-y:auto;
+  }
+  .overlay.open{display:flex}
+  .modal{
+    background:var(--paper-2);width:100%;max-width:760px;
+    border-radius:18px;overflow:hidden;
+    box-shadow:0 30px 80px -30px rgba(0,0,0,.6);
+    animation:rise .26s ease;
+  }
+  @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  .modal-head{
+    background:var(--green);color:var(--paper-2);
+    padding:34px 40px 30px;position:relative;
+  }
+  .modal-head .card-cat{color:var(--saffron)}
+  .modal-head h2{
+    font-family:"Bricolage Grotesque",sans-serif;font-weight:800;
+    font-size:clamp(28px,5vw,44px);line-height:1;letter-spacing:-.02em;
+    margin:10px 0 14px;
+  }
+  .modal-head p{color:rgba(252,250,243,.82);max-width:54ch;font-size:18px}
+  .modal-spec{
+    display:flex;gap:30px;margin-top:22px;
+    font-family:"Space Mono",monospace;
+  }
+  .modal-spec div b{display:block;font-size:20px;color:var(--saffron)}
+  .modal-spec div i{font-style:normal;font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:rgba(252,250,243,.6)}
+  .close{
+    position:absolute;top:22px;right:22px;
+    width:40px;height:40px;border-radius:50%;
+    border:1px solid rgba(252,250,243,.3);background:transparent;
+    color:var(--paper-2);font-size:20px;cursor:pointer;line-height:1;
+    display:grid;place-items:center;transition:.15s;
+  }
+  .close:hover,.close:focus-visible{background:var(--saffron);color:var(--green-deep);border-color:var(--saffron);outline:none}
+
+  .modal-body{display:grid;grid-template-columns:1fr 1.4fr;gap:0}
+  .ingredients{
+    padding:32px 30px 36px 40px;border-right:1px solid var(--line);
+    background:linear-gradient(var(--paper-2),var(--paper));
+  }
+  .method{padding:32px 40px 40px 30px}
+  .block-label{
+    font-family:"Space Mono",monospace;font-size:12px;text-transform:uppercase;
+    letter-spacing:.1em;color:var(--saffron);margin-bottom:18px;
+  }
+  .ing{list-style:none;display:flex;flex-direction:column;gap:11px}
+  .ing li{display:flex;gap:12px;align-items:baseline;font-size:16px;line-height:1.35}
+  .ing .amt{
+    font-family:"Space Mono",monospace;font-size:13px;font-weight:700;
+    color:var(--green-soft);min-width:74px;flex-shrink:0;
+  }
+  .ing .sub{
+    margin-top:8px;font-family:"Bricolage Grotesque",sans-serif;font-weight:600;
+    font-size:13px;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-soft);
+  }
+  .steps{list-style:none;counter-reset:step;display:flex;flex-direction:column;gap:18px}
+  .steps li{position:relative;padding-left:42px;font-size:17px;line-height:1.5}
+  .steps li::before{
+    counter-increment:step;content:counter(step,decimal-leading-zero);
+    position:absolute;left:0;top:1px;
+    font-family:"Space Mono",monospace;font-size:13px;font-weight:700;
+    color:var(--saffron);
+  }
+  .modal-foot{
+    padding:18px 40px 26px;border-top:1px solid var(--line);
+    font-family:"Space Mono",monospace;font-size:12.5px;color:var(--ink-soft);
+  }
+  .modal-foot b{color:var(--green-soft)}
+
+  /* ---- footer ---- */
+  footer{
+    margin-top:64px;border-top:1px solid var(--line);
+    padding:34px 0 56px;
+    display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;
+    font-family:"Space Mono",monospace;font-size:12.5px;color:var(--ink-soft);
+    letter-spacing:.02em;
+  }
+  footer .mark{font-size:16px}
+
+  /* ---- responsive ---- */
+  @media(max-width:880px){
+    .grid{grid-template-columns:repeat(2,1fr)}
+    .hero{padding:48px 32px 42px}
+    .hero-clock{width:180px;height:180px;right:-30px;top:-30px}
+    .hero-clock::before{width:128px;height:128px}
+    .modal-body{grid-template-columns:1fr}
+    .ingredients{border-right:none;border-bottom:1px solid var(--line)}
+    .topnav{display:none}
+  }
+  @media(max-width:560px){
+    body{font-size:17px}
+    .wrap{padding:0 18px}
+    .grid{grid-template-columns:1fr}
+    .hero{padding:40px 24px 36px}
+    .hero-clock{display:none}
+    .modal-head,.ingredients,.method,.modal-foot{padding-left:26px;padding-right:26px}
+  }
+  @media(prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important;scroll-behavior:auto}
+  }
+  /* ---- membership lock on cards ---- */
+  .card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+  .lock-pill{font-family:"Space Mono",monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--saffron);border:1px solid var(--saffron-soft);border-radius:999px;padding:3px 9px;white-space:nowrap}
+  .card.unlocked .lock-pill{display:none}
+  .spec{flex-wrap:wrap}
+  .modal-nutrition{display:flex;flex-wrap:wrap;gap:8px 20px;align-items:baseline;padding:14px 40px;background:var(--paper);border-bottom:1px solid var(--line);font-family:"Space Mono",monospace;font-size:12.5px;color:var(--ink-soft)}
+  .modal-nutrition .nut-label{text-transform:uppercase;letter-spacing:.08em;font-size:10.5px;color:var(--saffron)}
+  .modal-nutrition b{color:var(--green-soft);font-size:14px}
+  @media(max-width:560px){.modal-nutrition{padding-left:26px;padding-right:26px}}
+  /* ---- weekly plans ---- */
+  .plans-intro{max-width:60ch;color:var(--ink-soft);font-size:17px;margin:-10px 0 24px}
+  .plan-card .card-cat{color:var(--green-soft)}
+  .plan-week{padding:24px 40px 8px;display:flex;flex-direction:column;gap:14px;max-height:60vh;overflow-y:auto}
+  .plan-day{border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .plan-day-head{display:flex;justify-content:space-between;align-items:center;background:var(--paper);padding:10px 16px;border-bottom:1px solid var(--line)}
+  .pd-name{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:15px;color:var(--green)}
+  .pd-kcal{font-family:"Space Mono",monospace;font-size:11.5px;color:var(--ink-soft)}
+  .plan-meal{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:var(--paper-2);border:none;border-bottom:1px solid var(--line);padding:11px 16px;cursor:pointer;font:inherit;color:inherit}
+  .plan-meal:last-child{border-bottom:none}
+  .plan-meal:hover,.plan-meal:focus-visible{background:var(--paper);outline:none}
+  .pm-slot{font-family:"Space Mono",monospace;font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--saffron);width:64px;flex-shrink:0}
+  .pm-name{flex:1;font-size:15px}
+  .pm-kcal{font-family:"Space Mono",monospace;font-size:12px;color:var(--ink-soft)}
+  @media(max-width:560px){.plan-week{padding-left:20px;padding-right:20px}.pm-slot{width:54px}}
+  .topbar{flex-wrap:wrap;gap:12px}
+  .region-switch{display:flex;gap:4px;background:var(--paper-2);border:1px solid var(--line-strong);border-radius:999px;padding:3px}
+  .region-switch button{font-family:"Space Mono",monospace;font-size:11px;border:none;background:transparent;color:var(--ink-soft);padding:6px 10px;border-radius:999px;cursor:pointer}
+  .region-switch button.on{background:var(--green);color:var(--paper-2)}
+  .region-switch button:hover:not(.on){color:var(--ink)}
+  @media(max-width:560px){.region-switch button{padding:6px 8px;font-size:10.5px}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="topbar">
+    <div class="mark">After Six <span>EST. 18:00</span></div>
+    <nav class="topnav" aria-label="Categories">
+      <a href="#breakfast">Breakfast</a>
+      <a href="#lunch">Lunch</a>
+      <a href="#dinner">Dinner</a>
+      <a href="#healthy">Healthy</a>
+      <a href="#treats">Sweet</a>
+      <a href="#smoothies">Smoothies</a>
+      <a href="#plans">Plans</a>
+      <a href="#membership" style="color:var(--saffron);border-color:var(--saffron)">Join</a>
+    </nav>
+    <div class="region-switch" role="group" aria-label="Region">
+      <button data-region="UK">£ UK</button>
+      <button data-region="US">$ US</button>
+      <button data-region="EU">€ EU</button>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-clock" aria-hidden="true"><b>6:00</b></div>
+    <div class="hero-eyebrow">After Six · Recipe Membership</div>
+    <h1>Dinner, <em>planned and sorted</em> — every night of the week.</h1>
+    <p>50+ chef-tested recipes, ready-made weekly meal plans, nutrition on every dish, and a kitchen assistant on hand whenever you cook.</p>
+  </section>
+
+  <div class="strip">
+    <span>A collection of <b>74 recipes</b></span>
+    <span>Metric · UK oven temps (fan)</span>
+    <span>Tap any card to read the full method</span>
+  </div>
+</div>
+
+<nav class="catnav" aria-label="Jump to section">
+  <div class="wrap" style="display:flex;gap:8px;flex-wrap:wrap;padding:0 28px">
+    <a href="#breakfast">01 — Breakfast</a>
+    <a href="#lunch">02 — Lunch</a>
+    <a href="#dinner">03 — Dinner</a>
+    <a href="#healthy">04 — Healthy</a>
+    <a href="#treats">05 — Desserts & Snacks</a>
+    <a href="#smoothies">06 — Smoothies</a>
+    <a href="#plans">07 — Plans</a>
+  </div>
+</nav>
+
+<main class="wrap" id="catalogue"></main>
+
+<div class="wrap">
+  <section class="section" id="plans">
+    <div class="section-head"><span class="section-num">07</span><h2>Weekly Plans</h2><span class="rule"></span></div>
+    <p class="plans-intro">Seven days of meals, mapped out for you. Open any recipe straight from the day.</p>
+    <div class="grid" id="plansGrid"></div>
+  </section>
+</div>
+
+<style>
+  .pricing{padding:60px 0 16px}
+  .plans{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;max-width:760px;margin:0 auto;align-items:start}
+  .plan{background:var(--green);color:var(--paper-2);border-radius:18px;padding:38px 32px 32px;text-align:center;position:relative;border:2px solid transparent}
+  .plan.featured{border-color:var(--saffron)}
+  .badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--saffron);color:var(--green-deep);font-family:"Space Mono",monospace;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:5px 12px;border-radius:999px;white-space:nowrap}
+  .plan .tier{font-family:"Space Mono",monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--saffron)}
+  .plan .price{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:clamp(38px,7vw,52px);line-height:1;letter-spacing:-.03em;margin:8px 0 2px}
+  .plan .price span{font-size:16px;font-weight:600;color:rgba(252,250,243,.7)}
+  .plan .sub{font-family:"Space Mono",monospace;font-size:11.5px;color:var(--saffron);min-height:16px}
+  .plan-list{list-style:none;text-align:left;margin:22px 0 24px;display:flex;flex-direction:column;gap:10px}
+  .plan-list li{position:relative;padding-left:28px;font-size:15px;line-height:1.4;color:rgba(252,250,243,.92)}
+  .plan-list li::before{content:"";position:absolute;left:2px;top:7px;width:13px;height:7px;border-left:2px solid var(--saffron);border-bottom:2px solid var(--saffron);transform:rotate(-45deg)}
+  .plan .cta{width:100%;background:var(--saffron);color:var(--green-deep);border:none;cursor:pointer;font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:17px;letter-spacing:-.01em;padding:15px;border-radius:11px;transition:.15s}
+  .plan .cta:hover,.plan .cta:focus-visible{filter:brightness(1.06);outline:2px solid var(--paper-2);outline-offset:2px}
+  .reassure{text-align:center;margin:22px auto 0;font-family:"Space Mono",monospace;font-size:12.5px;color:var(--ink-soft);letter-spacing:.02em}
+  @media(max-width:620px){.plans{grid-template-columns:1fr;max-width:420px}.plan.featured{order:-1}}
+</style>
+
+<section class="pricing" id="membership">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="section-num">★</span>
+      <h2>Membership</h2>
+      <span class="rule"></span>
+    </div>
+    <div class="plans">
+      <div class="plan featured">
+        <div class="badge">Most popular</div>
+        <div class="tier">Monthly</div>
+        <div class="price"><span data-price="monthly">£8.99</span><span> / month</span></div>
+        <div class="sub">&nbsp;</div>
+        <ul class="plan-list">
+          <li>The full recipe library — every menu, always growing</li>
+          <li>The kitchen assistant — 100 chats a month</li>
+          <li>New recipes added regularly</li>
+          <li>Cancel anytime</li>
+        </ul>
+        <button class="cta" data-plan="monthly">Become a member</button>
+      </div>
+      <div class="plan">
+        <div class="tier">Annual</div>
+        <div class="price"><span data-price="annual">£107.88</span><span> / year</span></div>
+        <div class="sub">Billed once a year</div>
+        <ul class="plan-list">
+          <li>Everything in Monthly</li>
+          <li>The kitchen assistant — 100 chats a month</li>
+          <li>One simple payment a year</li>
+          <li>Cancel anytime</li>
+        </ul>
+        <button class="cta" data-plan="annual">Get the year</button>
+      </div>
+    </div>
+    <div class="reassure">Cancel anytime · no contract · card handled securely by Stripe</div>
+  </div>
+</section>
+
+
+<div class="wrap">
+  <footer>
+    <div class="mark">After Six <span>EST. 18:00</span></div>
+    <div>aftersixco.com — recipes written to be cooked, not just admired.</div>
+  </footer>
+</div>
+
+<!-- modal -->
+<div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-labelledby="m-title">
+  <div class="modal" id="modal"></div>
+</div>
+
+<script>
+const RECIPES = [{"id":"shakshuka","cat":"breakfast","category":"Breakfast / Brunch","name":"Shakshuka","blurb":"Eggs poached in a smoky pepper-and-tomato sauce. One pan, plenty of bread, ready before you've laid the table.","time":"30 min","serves":"4","effort":"Easy","nutrition":{"kcal":320,"protein":18,"carbs":18,"fat":20}},{"id":"banana-bread","cat":"breakfast","category":"Breakfast / Sweet","name":"Banana Bread","blurb":"The reliable one. Dark, dense and just sweet enough — the answer to three sad bananas on the counter.","time":"1 hr 10","serves":"1 loaf","effort":"Easy","nutrition":{"kcal":240,"protein":4,"carbs":34,"fat":10}},{"id":"spaghetti-aglio-e-olio","cat":"lunch","category":"Quick Lunch","name":"Spaghetti Aglio e Olio","blurb":"Garlic, oil, chilli, pasta. Five ingredients, fifteen minutes, and a lesson in how good restraint can taste.","time":"15 min","serves":"2","effort":"Easy","nutrition":{"kcal":520,"protein":12,"carbs":70,"fat":22}},{"id":"lemon-herb-chicken-thighs","cat":"dinner","category":"Dinner","name":"Lemon & Herb Chicken Thighs","blurb":"Crisp-skinned thighs roasted with lemon, garlic and woody herbs. The tray does all the work while you sit down.","time":"45 min","serves":"4","effort":"Easy","nutrition":{"kcal":420,"protein":34,"carbs":3,"fat":30}},{"id":"red-lentil-dahl","cat":"dinner","category":"Vegetarian Dinner","name":"Red Lentil Dahl","blurb":"Soft, golden and deeply savoury, finished with a sizzling garlic tadka poured over at the table.","time":"35 min","serves":"4","effort":"Easy","nutrition":{"kcal":360,"protein":18,"carbs":48,"fat":11}},{"id":"caramelised-onion-gruy-re-galette","cat":"lunch","category":"Vegetarian Lunch","name":"Caramelised Onion & Gruyère Galette","blurb":"A free-form tart of slow, sweet onions under nutty melted gruyère. Looks like effort; mostly just patience.","time":"1 hr 15","serves":"4","effort":"A project","nutrition":{"kcal":520,"protein":14,"carbs":42,"fat":33}},{"id":"charred-broccoli-garlic-chilli","cat":"dinner","category":"Dinner Side","name":"Charred Broccoli, Garlic & Chilli","blurb":"Roasted hard until the edges crackle, then hit with garlic, chilli and lemon. The way to convert a sceptic.","time":"25 min","serves":"4","effort":"Easy","nutrition":{"kcal":110,"protein":5,"carbs":9,"fat":7}},{"id":"smashed-cucumber-salad","cat":"lunch","category":"Light Lunch / Side","name":"Smashed Cucumber Salad","blurb":"Bruised, salted cucumbers that drink up a sharp sesame-and-garlic dressing. Cold, crunchy, ten minutes of work.","time":"15 min + rest","serves":"4","effort":"Easy","nutrition":{"kcal":90,"protein":2,"carbs":8,"fat":6}},{"id":"olive-oil-dark-chocolate-cookies","cat":"dinner","category":"To Finish","name":"Olive Oil & Dark Chocolate Cookies","blurb":"Fudgy, faintly savoury and finished with flaky salt — made with oil, so there's nothing to soften or wait for.","time":"30 min","serves":"~16","effort":"Easy","nutrition":{"kcal":150,"protein":2,"carbs":18,"fat":8}},{"id":"buttermilk-pancakes","cat":"breakfast","category":"Breakfast","name":"Buttermilk Pancakes","blurb":"Tall, tender and weekend-worthy. A proper stack worth getting out of bed for, ready in under half an hour.","time":"25 min","serves":"4","effort":"Easy","nutrition":{"kcal":310,"protein":9,"carbs":48,"fat":9}},{"id":"bircher-muesli","cat":"breakfast","category":"Breakfast","name":"Bircher Muesli","blurb":"Oats soaked overnight with apple and yoghurt, so breakfast is already waiting when you stumble into the kitchen.","time":"10 min + overnight","serves":"2","effort":"Easy","nutrition":{"kcal":340,"protein":11,"carbs":52,"fat":10}},{"id":"avocado-chilli-eggs-on-toast","cat":"breakfast","category":"Breakfast","name":"Avocado & Chilli Eggs on Toast","blurb":"The modern classic, done properly: lemony avocado, a soft poached egg, and a hit of chilli on good sourdough.","time":"15 min","serves":"2","effort":"Easy","nutrition":{"kcal":360,"protein":14,"carbs":30,"fat":21}},{"id":"breakfast-hash","cat":"breakfast","category":"Brunch","name":"Breakfast Hash","blurb":"Crisp potatoes, peppers and mushrooms with eggs baked right in. A whole brunch cooked in one big pan.","time":"35 min","serves":"4","effort":"Easy","nutrition":{"kcal":330,"protein":13,"carbs":38,"fat":14}},{"id":"roasted-tomato-soup","cat":"lunch","category":"Lunch","name":"Roasted Tomato Soup","blurb":"Tomatoes roasted until sweet and jammy, then blitzed smooth. A world away from anything out of a tin.","time":"50 min","serves":"4","effort":"Easy","nutrition":{"kcal":180,"protein":4,"carbs":18,"fat":11}},{"id":"greek-salad","cat":"lunch","category":"Lunch","name":"Greek Salad","blurb":"Just-ripe tomatoes, crisp cucumber and a slab of feta under good oil and oregano. Summer on a plate.","time":"15 min","serves":"4","effort":"Easy","nutrition":{"kcal":260,"protein":8,"carbs":12,"fat":21}},{"id":"chickpea-feta-herb-salad","cat":"lunch","category":"Lunch","name":"Chickpea, Feta & Herb Salad","blurb":"A bright, protein-heavy bowl that comes together with a tin and a few herbs — and travels brilliantly.","time":"15 min","serves":"4","effort":"Easy","nutrition":{"kcal":340,"protein":14,"carbs":30,"fat":18}},{"id":"spinach-cheese-frittata","cat":"lunch","category":"Lunch","name":"Spinach & Cheese Frittata","blurb":"Eggs, greens and cheddar set into golden wedges. Just as good cold from the fridge the next day.","time":"30 min","serves":"4","effort":"Easy","nutrition":{"kcal":290,"protein":20,"carbs":5,"fat":21}},{"id":"halloumi-grain-bowl","cat":"lunch","category":"Lunch","name":"Halloumi Grain Bowl","blurb":"Golden fried halloumi over grains and roasted veg, with a honey-lemon dressing. Hearty without being heavy.","time":"25 min","serves":"2","effort":"Easy","nutrition":{"kcal":560,"protein":24,"carbs":45,"fat":32}},{"id":"spaghetti-bolognese","cat":"dinner","category":"Dinner","name":"Spaghetti Bolognese","blurb":"The slow-simmered ragù that earns its place in the rotation. Low effort, long reward — start it and walk away.","time":"1 hr","serves":"4","effort":"Easy","nutrition":{"kcal":620,"protein":32,"carbs":72,"fat":22}},{"id":"thai-green-chicken-curry","cat":"dinner","category":"Dinner","name":"Thai Green Chicken Curry","blurb":"Fragrant, coconut-rich and on the table in half an hour. Adjust the heat to taste and serve over jasmine rice.","time":"35 min","serves":"4","effort":"Easy","nutrition":{"kcal":480,"protein":30,"carbs":14,"fat":32}},{"id":"chilli-con-carne","cat":"dinner","category":"Dinner","name":"Chilli Con Carne","blurb":"Smoky, thick and made for a crowd. Better the next day, so make double and bank a future dinner.","time":"50 min","serves":"4","effort":"Easy","nutrition":{"kcal":430,"protein":30,"carbs":32,"fat":20}},{"id":"salmon-vegetable-traybake","cat":"dinner","category":"Dinner","name":"Salmon & Vegetable Traybake","blurb":"Salmon, potatoes and summer veg roasted on one tray. Maximum dinner, minimum washing up.","time":"35 min","serves":"4","effort":"Easy","nutrition":{"kcal":480,"protein":34,"carbs":28,"fat":26}},{"id":"mushroom-risotto","cat":"dinner","category":"Vegetarian Dinner","name":"Mushroom Risotto","blurb":"Creamy, comforting and quietly impressive. Twenty minutes of gentle stirring is the whole secret.","time":"40 min","serves":"4","effort":"Some attention","nutrition":{"kcal":520,"protein":14,"carbs":68,"fat":20}},{"id":"chicken-stir-fry","cat":"dinner","category":"Dinner","name":"Chicken Stir-Fry","blurb":"Fast, fresh and endlessly adaptable. Get everything chopped first and it's done in the time rice takes to cook.","time":"25 min","serves":"4","effort":"Easy","nutrition":{"kcal":380,"protein":32,"carbs":24,"fat":16}},{"id":"greek-yoghurt-berry-bowl","cat":"breakfast","category":"Breakfast","name":"Greek Yoghurt & Berry Bowl","blurb":"Thick yoghurt, fresh berries and crunch — high-protein and ready in the time it takes the kettle to boil.","time":"5 min","serves":"1","effort":"Easy","nutrition":{"kcal":330,"protein":20,"carbs":38,"fat":11}},{"id":"veggie-breakfast-burrito","cat":"breakfast","category":"Breakfast","name":"Veggie Breakfast Burrito","blurb":"Soft scrambled eggs, peppers and cheese rolled up to go. A proper breakfast you can eat one-handed.","time":"20 min","serves":"2","effort":"Easy","nutrition":{"kcal":420,"protein":22,"carbs":34,"fat":22}},{"id":"mushroom-spinach-omelette","cat":"breakfast","category":"Breakfast","name":"Mushroom & Spinach Omelette","blurb":"Buttery mushrooms and greens folded into a soft omelette — fast, savoury and naturally low-carb.","time":"12 min","serves":"1","effort":"Easy","nutrition":{"kcal":310,"protein":22,"carbs":4,"fat":23}},{"id":"overnight-chia-pudding","cat":"breakfast","category":"Breakfast","name":"Overnight Chia Pudding","blurb":"Make-ahead and nutrient-dense — chia soaked in milk until thick, ready to top and go.","time":"5 min + overnight","serves":"2","effort":"Easy","nutrition":{"kcal":280,"protein":10,"carbs":28,"fat":14}},{"id":"tuna-ni-oise-salad","cat":"lunch","category":"Lunch","name":"Tuna Niçoise Salad","blurb":"A bistro classic — tuna, egg, potato and beans over leaves. Substantial, fresh and high in protein.","time":"25 min","serves":"2","effort":"Easy","nutrition":{"kcal":420,"protein":28,"carbs":30,"fat":20}},{"id":"caprese-pesto-ciabatta","cat":"lunch","category":"Lunch","name":"Caprese & Pesto Ciabatta","blurb":"Mozzarella, ripe tomato and basil pressed into ciabatta with pesto. Ten minutes to a proper lunch.","time":"10 min","serves":"2","effort":"Easy","nutrition":{"kcal":520,"protein":22,"carbs":46,"fat":28}},{"id":"lentil-vegetable-soup","cat":"lunch","category":"Lunch","name":"Lentil & Vegetable Soup","blurb":"A thick, savoury bowlful of lentils and veg. Cheap, filling and freezes brilliantly for the week.","time":"40 min","serves":"4","effort":"Easy","nutrition":{"kcal":250,"protein":13,"carbs":38,"fat":5}},{"id":"falafel-wrap","cat":"lunch","category":"Lunch","name":"Falafel Wrap","blurb":"Crisp falafel, hummus and crunchy salad rolled in warm flatbread with a drizzle of tahini.","time":"15 min","serves":"2","effort":"Easy","nutrition":{"kcal":480,"protein":16,"carbs":58,"fat":20}},{"id":"sausage-white-bean-casserole","cat":"dinner","category":"Dinner","name":"Sausage & White Bean Casserole","blurb":"Sausages braised with beans in a smoky tomato sauce. One pot, deeply comforting, ready for the table.","time":"45 min","serves":"4","effort":"Easy","nutrition":{"kcal":560,"protein":28,"carbs":30,"fat":36}},{"id":"margherita-pizza","cat":"dinner","category":"Dinner","name":"Margherita Pizza","blurb":"Blistered crust, simple tomato, melting mozzarella and basil. The one everyone actually wants.","time":"30 min","serves":"2","effort":"Easy","nutrition":{"kcal":620,"protein":26,"carbs":72,"fat":26}},{"id":"beef-broccoli-noodles","cat":"dinner","category":"Dinner","name":"Beef & Broccoli Noodles","blurb":"Seared beef and crisp broccoli in a glossy soy-garlic sauce over noodles. Faster than a takeaway.","time":"20 min","serves":"2","effort":"Easy","nutrition":{"kcal":620,"protein":38,"carbs":62,"fat":22}},{"id":"roast-vegetable-feta-pasta","cat":"dinner","category":"Dinner","name":"Roast Vegetable & Feta Pasta","blurb":"Roasted veg and a block of feta melted into a creamy sauce, tossed straight through pasta.","time":"40 min","serves":"4","effort":"Easy","nutrition":{"kcal":560,"protein":20,"carbs":78,"fat":20}},{"id":"fish-pie","cat":"dinner","category":"Dinner","name":"Fish Pie","blurb":"Flaky fish in a creamy sauce under a golden mash lid. Proper comfort food, worth the little effort.","time":"50 min","serves":"4","effort":"Some attention","nutrition":{"kcal":480,"protein":34,"carbs":44,"fat":18}},{"id":"chicken-katsu-curry","cat":"dinner","category":"Dinner","name":"Chicken Katsu Curry","blurb":"Crisp breaded chicken over rice with a mellow, lightly sweet curry sauce. A guaranteed crowd-pleaser.","time":"40 min","serves":"4","effort":"Some attention","nutrition":{"kcal":680,"protein":45,"carbs":62,"fat":26}},{"id":"grilled-chicken-quinoa-bowl","cat":"healthy","category":"High-protein","name":"Grilled Chicken & Quinoa Bowl","blurb":"Lean grilled chicken over fluffy quinoa with griddled courgette and rocket. Balanced and filling.","time":"30 min","serves":"2","effort":"Easy","nutrition":{"kcal":480,"protein":42,"carbs":40,"fat":16}},{"id":"baked-salmon-with-greens","cat":"healthy","category":"Light dinner","name":"Baked Salmon with Greens","blurb":"Salmon roasted with tenderstem and asparagus — omega-rich, low-carb and on the table in 25 minutes.","time":"25 min","serves":"2","effort":"Easy","nutrition":{"kcal":420,"protein":34,"carbs":8,"fat":28}},{"id":"tofu-vegetable-stir-fry","cat":"healthy","category":"Vegan","name":"Tofu & Vegetable Stir-Fry","blurb":"Crisp tofu and crunchy veg in a light soy-sesame sauce. Plant-based, quick and genuinely satisfying.","time":"25 min","serves":"2","effort":"Easy","nutrition":{"kcal":360,"protein":22,"carbs":24,"fat":18}},{"id":"turkey-veg-meatballs","cat":"healthy","category":"High-protein","name":"Turkey & Veg Meatballs","blurb":"Lean turkey meatballs with hidden veg, simmered in tomato sauce. Lighter than beef, just as good.","time":"35 min","serves":"4","effort":"Easy","nutrition":{"kcal":320,"protein":34,"carbs":14,"fat":14}},{"id":"sweet-potato-black-bean-bowl","cat":"healthy","category":"Vegan","name":"Sweet Potato & Black Bean Bowl","blurb":"Roasted sweet potato, spiced black beans and avocado over rice. Hearty, plant-based and full of fibre.","time":"35 min","serves":"2","effort":"Easy","nutrition":{"kcal":520,"protein":16,"carbs":76,"fat":18}},{"id":"egg-veg-scramble","cat":"healthy","category":"Light & high-protein","name":"Egg & Veg Scramble","blurb":"Soft eggs scrambled through spinach, tomato and mushroom. Protein-packed, low-carb, five-minute fuel.","time":"12 min","serves":"1","effort":"Easy","nutrition":{"kcal":280,"protein":21,"carbs":8,"fat":18}},{"id":"courgetti-with-turkey-bolognese","cat":"healthy","category":"Low-carb","name":"Courgetti with Turkey Bolognese","blurb":"A lighter take on bolognese — lean turkey ragù over spiralised courgette instead of pasta.","time":"30 min","serves":"2","effort":"Easy","nutrition":{"kcal":330,"protein":34,"carbs":18,"fat":14}},{"id":"salmon-poke-style-rice-bowl","cat":"healthy","category":"High-protein","name":"Salmon Poke-Style Rice Bowl","blurb":"Cubed salmon over seasoned rice with edamame, cucumber and avocado. Fresh, balanced and bright.","time":"20 min","serves":"2","effort":"Easy","nutrition":{"kcal":520,"protein":30,"carbs":52,"fat":20}},{"id":"lemon-herb-cod-with-veg","cat":"healthy","category":"Light dinner","name":"Lemon Herb Cod with Veg","blurb":"Flaky cod roasted over courgette, peppers and tomatoes with lemon and herbs. Light but properly satisfying.","time":"25 min","serves":"2","effort":"Easy","nutrition":{"kcal":300,"protein":34,"carbs":14,"fat":12}},{"id":"chickpea-spinach-curry","cat":"healthy","category":"Vegan","name":"Chickpea & Spinach Curry","blurb":"A lighter curry — chickpeas and spinach in a spiced tomato sauce with just a little coconut. Big on flavour.","time":"30 min","serves":"4","effort":"Easy","nutrition":{"kcal":340,"protein":15,"carbs":40,"fat":14}},{"id":"greek-chicken-salad-bowl","cat":"healthy","category":"High-protein","name":"Greek Chicken Salad Bowl","blurb":"Grilled chicken over a crisp Greek-style salad with feta and olives. Fresh, high-protein, low effort.","time":"25 min","serves":"2","effort":"Easy","nutrition":{"kcal":420,"protein":40,"carbs":12,"fat":24}},{"id":"miso-glazed-aubergine-with-greens","cat":"healthy","category":"Vegan","name":"Miso-Glazed Aubergine with Greens","blurb":"Aubergine roasted soft then glazed with sweet-savoury miso, served with greens and rice. Quietly impressive.","time":"30 min","serves":"2","effort":"Easy","nutrition":{"kcal":360,"protein":9,"carbs":52,"fat":12}},{"id":"porridge-with-banana-honey","cat":"breakfast","category":"Breakfast","name":"Porridge with Banana & Honey","blurb":"Warm, creamy oats topped with banana and a drizzle of honey. The cheapest, cosiest start there is.","time":"10 min","serves":"2","effort":"Easy","nutrition":{"kcal":330,"protein":11,"carbs":55,"fat":7}},{"id":"smoked-salmon-cream-cheese-bagel","cat":"breakfast","category":"Breakfast","name":"Smoked Salmon & Cream Cheese Bagel","blurb":"Toasted bagel, soft cheese and silky smoked salmon. A deli classic in five minutes flat.","time":"5 min","serves":"1","effort":"Easy","nutrition":{"kcal":450,"protein":26,"carbs":42,"fat":18}},{"id":"berry-smoothie-bowl","cat":"breakfast","category":"Breakfast","name":"Berry Smoothie Bowl","blurb":"A thick, spoonable smoothie under a crunchy topping. Bright, refreshing and packed with fruit.","time":"5 min","serves":"1","effort":"Easy","nutrition":{"kcal":340,"protein":14,"carbs":56,"fat":8}},{"id":"french-toast","cat":"breakfast","category":"Breakfast","name":"French Toast","blurb":"Custardy, golden and faintly spiced. A weekend treat that uses up the last of the loaf.","time":"15 min","serves":"2","effort":"Easy","nutrition":{"kcal":420,"protein":14,"carbs":50,"fat":18}},{"id":"scrambled-eggs-on-toast","cat":"breakfast","category":"Breakfast","name":"Scrambled Eggs on Toast","blurb":"Soft, slow-scrambled eggs piled on buttered sourdough. Simple done properly.","time":"10 min","serves":"2","effort":"Easy","nutrition":{"kcal":340,"protein":20,"carbs":28,"fat":18}},{"id":"breakfast-tacos","cat":"breakfast","category":"Breakfast","name":"Breakfast Tacos","blurb":"Soft tacos loaded with scrambled egg, avocado, cheese and salsa. A bright, handheld start.","time":"20 min","serves":"2","effort":"Easy","nutrition":{"kcal":430,"protein":22,"carbs":32,"fat":24}},{"id":"chocolate-brownies","cat":"treats","category":"Dessert","name":"Chocolate Brownies","blurb":"Fudgy in the middle, crackly on top. The brownie everyone keeps coming back to the tin for.","time":"35 min","serves":"16","effort":"Easy","nutrition":{"kcal":230,"protein":3,"carbs":26,"fat":13}},{"id":"lemon-drizzle-loaf","cat":"treats","category":"Dessert","name":"Lemon Drizzle Loaf","blurb":"Tender sponge soaked in sharp lemon syrup. A teatime classic that's almost impossible to get wrong.","time":"1 hr","serves":"10","effort":"Easy","nutrition":{"kcal":280,"protein":4,"carbs":34,"fat":14}},{"id":"eton-mess","cat":"treats","category":"Dessert","name":"Eton Mess","blurb":"Cream, crushed meringue and strawberries thrown together. Five minutes to the easiest crowd-pleaser there is.","time":"15 min","serves":"4","effort":"Easy","nutrition":{"kcal":320,"protein":3,"carbs":24,"fat":24}},{"id":"apple-crumble","cat":"treats","category":"Dessert","name":"Apple Crumble","blurb":"Soft spiced apples under a buttery, oaty crumble. Pure comfort, best with a pour of custard.","time":"50 min","serves":"6","effort":"Easy","nutrition":{"kcal":340,"protein":4,"carbs":52,"fat":14}},{"id":"no-bake-cheesecake","cat":"treats","category":"Dessert","name":"No-Bake Cheesecake","blurb":"A cool, creamy set filling on a buttery biscuit base. No oven, no fuss — just a little patience.","time":"20 min + chill","serves":"8","effort":"Easy","nutrition":{"kcal":520,"protein":7,"carbs":38,"fat":38}},{"id":"chocolate-mug-cake","cat":"treats","category":"Dessert","name":"Chocolate Mug Cake","blurb":"A warm, gooey chocolate cake in a single mug, in the microwave, in two minutes. Dangerous knowledge.","time":"5 min","serves":"1","effort":"Easy","nutrition":{"kcal":430,"protein":6,"carbs":62,"fat":18}},{"id":"classic-hummus","cat":"treats","category":"Snack","name":"Classic Hummus","blurb":"Silky, lemony and garlicky — better than any tub. Keep a batch for dipping all week.","time":"10 min","serves":"6","effort":"Easy","nutrition":{"kcal":150,"protein":5,"carbs":12,"fat":10}},{"id":"oat-date-energy-balls","cat":"treats","category":"Snack","name":"Oat & Date Energy Balls","blurb":"No-bake bites of oats, dates and peanut butter. A handful beats reaching for the biscuit tin.","time":"15 min","serves":"12","effort":"Easy","nutrition":{"kcal":90,"protein":2,"carbs":13,"fat":3}},{"id":"spiced-roasted-chickpeas","cat":"treats","category":"Snack","name":"Spiced Roasted Chickpeas","blurb":"Crunchy, smoky and moreish — a high-fibre snack that disappears as fast as crisps.","time":"35 min","serves":"4","effort":"Easy","nutrition":{"kcal":160,"protein":7,"carbs":20,"fat":5}},{"id":"flapjacks","cat":"treats","category":"Snack","name":"Flapjacks","blurb":"Chewy, golden oat bars held together with butter and syrup. A lunchbox stalwart for good reason.","time":"35 min","serves":"12","effort":"Easy","nutrition":{"kcal":210,"protein":3,"carbs":26,"fat":11}},{"id":"green-smoothie","cat":"smoothies","category":"Smoothie","name":"Green Smoothie","blurb":"Spinach you can't taste, fruit you can. A fresh, energising start that sneaks in your greens.","time":"5 min","serves":"1","effort":"Easy","nutrition":{"kcal":220,"protein":5,"carbs":38,"fat":5}},{"id":"berry-blast","cat":"smoothies","category":"Smoothie","name":"Berry Blast","blurb":"Tart, creamy and bright purple. A handful of berries and a banana, blitzed in a minute.","time":"5 min","serves":"1","effort":"Easy","nutrition":{"kcal":210,"protein":9,"carbs":36,"fat":3}},{"id":"banana-peanut-butter","cat":"smoothies","category":"Smoothie","name":"Banana Peanut Butter","blurb":"Thick, malty and satisfying — closer to a treat than a drink, but it'll keep you going for hours.","time":"5 min","serves":"1","effort":"Easy","nutrition":{"kcal":360,"protein":14,"carbs":46,"fat":14}},{"id":"mango-coconut","cat":"smoothies","category":"Smoothie","name":"Mango & Coconut","blurb":"Sunshine in a glass — sweet mango, creamy coconut and a squeeze of lime to keep it sharp.","time":"5 min","serves":"2","effort":"Easy","nutrition":{"kcal":250,"protein":5,"carbs":40,"fat":9}},{"id":"tropical","cat":"smoothies","category":"Smoothie","name":"Tropical","blurb":"Pineapple, mango and banana over orange juice. Tastes like a holiday, ready before you're out the door.","time":"5 min","serves":"2","effort":"Easy","nutrition":{"kcal":230,"protein":3,"carbs":55,"fat":1}},{"id":"chocolate-protein","cat":"smoothies","category":"Smoothie","name":"Chocolate Protein","blurb":"Chocolatey, thick and properly filling — a post-workout or busy-morning standby.","time":"5 min","serves":"1","effort":"Easy","nutrition":{"kcal":340,"protein":16,"carbs":40,"fat":10}},{"id":"strawberry-banana","cat":"smoothies","category":"Smoothie","name":"Strawberry Banana","blurb":"The classic everyone loves — sweet, smooth and ready in five minutes flat.","time":"5 min","serves":"1","effort":"Easy","nutrition":{"kcal":250,"protein":8,"carbs":46,"fat":3}},{"id":"blueberry-oat","cat":"smoothies","category":"Smoothie","name":"Blueberry Oat","blurb":"Blueberries and oats blended into a smooth, steady-energy drink that eats like breakfast.","time":"5 min","serves":"1","effort":"Easy","nutrition":{"kcal":290,"protein":11,"carbs":52,"fat":5}}];
+
+const PLANS = [{"id":"balanced-week","title":"Balanced Week","tag":"Everyday","blurb":"A varied, no-fuss week — a bit of everything, nothing repetitive.","avgKcal":1234,"days":[{"day":"Monday","dayKcal":1220,"slots":[{"slot":"Breakfast","id":"bircher-muesli","name":"Bircher Muesli","kcal":340},{"slot":"Lunch","id":"greek-salad","name":"Greek Salad","kcal":260},{"slot":"Dinner","id":"spaghetti-bolognese","name":"Spaghetti Bolognese","kcal":620}]},{"day":"Tuesday","dayKcal":960,"slots":[{"slot":"Breakfast","id":"avocado-chilli-eggs-on-toast","name":"Avocado & Chilli Eggs on Toast","kcal":360},{"slot":"Lunch","id":"roasted-tomato-soup","name":"Roasted Tomato Soup","kcal":180},{"slot":"Dinner","id":"lemon-herb-chicken-thighs","name":"Lemon & Herb Chicken Thighs","kcal":420}]},{"day":"Wednesday","dayKcal":1370,"slots":[{"slot":"Breakfast","id":"greek-yoghurt-berry-bowl","name":"Greek Yoghurt & Berry Bowl","kcal":330},{"slot":"Lunch","id":"halloumi-grain-bowl","name":"Halloumi Grain Bowl","kcal":560},{"slot":"Dinner","id":"salmon-vegetable-traybake","name":"Salmon & Vegetable Traybake","kcal":480}]},{"day":"Thursday","dayKcal":1330,"slots":[{"slot":"Breakfast","id":"mushroom-spinach-omelette","name":"Mushroom & Spinach Omelette","kcal":310},{"slot":"Lunch","id":"chickpea-feta-herb-salad","name":"Chickpea, Feta & Herb Salad","kcal":340},{"slot":"Dinner","id":"chicken-katsu-curry","name":"Chicken Katsu Curry","kcal":680}]},{"day":"Friday","dayKcal":1450,"slots":[{"slot":"Breakfast","id":"buttermilk-pancakes","name":"Buttermilk Pancakes","kcal":310},{"slot":"Lunch","id":"caprese-pesto-ciabatta","name":"Caprese & Pesto Ciabatta","kcal":520},{"slot":"Dinner","id":"margherita-pizza","name":"Margherita Pizza","kcal":620}]},{"day":"Saturday","dayKcal":1180,"slots":[{"slot":"Breakfast","id":"breakfast-hash","name":"Breakfast Hash","kcal":330},{"slot":"Lunch","id":"tuna-ni-oise-salad","name":"Tuna Niçoise Salad","kcal":420},{"slot":"Dinner","id":"chilli-con-carne","name":"Chilli Con Carne","kcal":430}]},{"day":"Sunday","dayKcal":1130,"slots":[{"slot":"Breakfast","id":"shakshuka","name":"Shakshuka","kcal":320},{"slot":"Lunch","id":"lentil-vegetable-soup","name":"Lentil & Vegetable Soup","kcal":250},{"slot":"Dinner","id":"roast-vegetable-feta-pasta","name":"Roast Vegetable & Feta Pasta","kcal":560}]}]},{"id":"healthy-high-protein-week","title":"Healthy & High-Protein Week","tag":"Healthy","blurb":"Lighter, protein-forward meals built around the Healthy menu.","avgKcal":1124,"days":[{"day":"Monday","dayKcal":1180,"slots":[{"slot":"Breakfast","id":"egg-veg-scramble","name":"Egg & Veg Scramble","kcal":280},{"slot":"Lunch","id":"grilled-chicken-quinoa-bowl","name":"Grilled Chicken & Quinoa Bowl","kcal":480},{"slot":"Dinner","id":"baked-salmon-with-greens","name":"Baked Salmon with Greens","kcal":420}]},{"day":"Tuesday","dayKcal":1070,"slots":[{"slot":"Breakfast","id":"greek-yoghurt-berry-bowl","name":"Greek Yoghurt & Berry Bowl","kcal":330},{"slot":"Lunch","id":"greek-chicken-salad-bowl","name":"Greek Chicken Salad Bowl","kcal":420},{"slot":"Dinner","id":"turkey-veg-meatballs","name":"Turkey & Veg Meatballs","kcal":320}]},{"day":"Wednesday","dayKcal":1130,"slots":[{"slot":"Breakfast","id":"mushroom-spinach-omelette","name":"Mushroom & Spinach Omelette","kcal":310},{"slot":"Lunch","id":"salmon-poke-style-rice-bowl","name":"Salmon Poke-Style Rice Bowl","kcal":520},{"slot":"Dinner","id":"lemon-herb-cod-with-veg","name":"Lemon Herb Cod with Veg","kcal":300}]},{"day":"Thursday","dayKcal":1090,"slots":[{"slot":"Breakfast","id":"overnight-chia-pudding","name":"Overnight Chia Pudding","kcal":280},{"slot":"Lunch","id":"grilled-chicken-quinoa-bowl","name":"Grilled Chicken & Quinoa Bowl","kcal":480},{"slot":"Dinner","id":"courgetti-with-turkey-bolognese","name":"Courgetti with Turkey Bolognese","kcal":330}]},{"day":"Friday","dayKcal":1120,"slots":[{"slot":"Breakfast","id":"egg-veg-scramble","name":"Egg & Veg Scramble","kcal":280},{"slot":"Lunch","id":"tuna-ni-oise-salad","name":"Tuna Niçoise Salad","kcal":420},{"slot":"Dinner","id":"baked-salmon-with-greens","name":"Baked Salmon with Greens","kcal":420}]},{"day":"Saturday","dayKcal":1130,"slots":[{"slot":"Breakfast","id":"greek-yoghurt-berry-bowl","name":"Greek Yoghurt & Berry Bowl","kcal":330},{"slot":"Lunch","id":"greek-chicken-salad-bowl","name":"Greek Chicken Salad Bowl","kcal":420},{"slot":"Dinner","id":"chicken-stir-fry","name":"Chicken Stir-Fry","kcal":380}]},{"day":"Sunday","dayKcal":1150,"slots":[{"slot":"Breakfast","id":"mushroom-spinach-omelette","name":"Mushroom & Spinach Omelette","kcal":310},{"slot":"Lunch","id":"sweet-potato-black-bean-bowl","name":"Sweet Potato & Black Bean Bowl","kcal":520},{"slot":"Dinner","id":"turkey-veg-meatballs","name":"Turkey & Veg Meatballs","kcal":320}]}]},{"id":"veggie-week","title":"Veggie Week","tag":"Vegetarian","blurb":"Seven meat-free days that don't feel like you're missing anything.","avgKcal":1131,"days":[{"day":"Monday","dayKcal":960,"slots":[{"slot":"Breakfast","id":"bircher-muesli","name":"Bircher Muesli","kcal":340},{"slot":"Lunch","id":"greek-salad","name":"Greek Salad","kcal":260},{"slot":"Dinner","id":"red-lentil-dahl","name":"Red Lentil Dahl","kcal":360}]},{"day":"Tuesday","dayKcal":960,"slots":[{"slot":"Breakfast","id":"overnight-chia-pudding","name":"Overnight Chia Pudding","kcal":280},{"slot":"Lunch","id":"chickpea-feta-herb-salad","name":"Chickpea, Feta & Herb Salad","kcal":340},{"slot":"Dinner","id":"chickpea-spinach-curry","name":"Chickpea & Spinach Curry","kcal":340}]},{"day":"Wednesday","dayKcal":1030,"slots":[{"slot":"Breakfast","id":"greek-yoghurt-berry-bowl","name":"Greek Yoghurt & Berry Bowl","kcal":330},{"slot":"Lunch","id":"roasted-tomato-soup","name":"Roasted Tomato Soup","kcal":180},{"slot":"Dinner","id":"mushroom-risotto","name":"Mushroom Risotto","kcal":520}]},{"day":"Thursday","dayKcal":1390,"slots":[{"slot":"Breakfast","id":"mushroom-spinach-omelette","name":"Mushroom & Spinach Omelette","kcal":310},{"slot":"Lunch","id":"caprese-pesto-ciabatta","name":"Caprese & Pesto Ciabatta","kcal":520},{"slot":"Dinner","id":"roast-vegetable-feta-pasta","name":"Roast Vegetable & Feta Pasta","kcal":560}]},{"day":"Friday","dayKcal":1230,"slots":[{"slot":"Breakfast","id":"buttermilk-pancakes","name":"Buttermilk Pancakes","kcal":310},{"slot":"Lunch","id":"halloumi-grain-bowl","name":"Halloumi Grain Bowl","kcal":560},{"slot":"Dinner","id":"tofu-vegetable-stir-fry","name":"Tofu & Vegetable Stir-Fry","kcal":360}]},{"day":"Saturday","dayKcal":1260,"slots":[{"slot":"Breakfast","id":"veggie-breakfast-burrito","name":"Veggie Breakfast Burrito","kcal":420},{"slot":"Lunch","id":"falafel-wrap","name":"Falafel Wrap","kcal":480},{"slot":"Dinner","id":"miso-glazed-aubergine-with-greens","name":"Miso-Glazed Aubergine with Greens","kcal":360}]},{"day":"Sunday","dayKcal":1090,"slots":[{"slot":"Breakfast","id":"shakshuka","name":"Shakshuka","kcal":320},{"slot":"Lunch","id":"lentil-vegetable-soup","name":"Lentil & Vegetable Soup","kcal":250},{"slot":"Dinner","id":"sweet-potato-black-bean-bowl","name":"Sweet Potato & Black Bean Bowl","kcal":520}]}]}];
+
+const SECTIONS = [
+  {id:"breakfast", num:"01", title:"Breakfast"},
+  {id:"lunch",     num:"02", title:"Lunch"},
+  {id:"dinner",    num:"03", title:"Dinner"},
+  {id:"healthy",   num:"04", title:"Healthy"},
+  {id:"treats",    num:"05", title:"Desserts & Snacks"},
+  {id:"smoothies", num:"06", title:"Smoothies"}
+];
+
+const cat = document.getElementById("catalogue");
+
+const ENDPOINT_RECIPE = "/.netlify/functions/get-recipe";
+
+// --- access helpers (resolve once a Supabase client + membership exist) ---
+window.AfterSix = {
+  async token(){
+    try{ if(window.supabase && window.supabase.auth){ const s = await window.supabase.auth.getSession(); return (s && s.data && s.data.session) ? s.data.session.access_token : ""; } }catch(e){}
+    return "";
+  },
+  async access(){
+    try{
+      if(window.supabase && window.supabase.auth){
+        const u = await window.supabase.auth.getUser();
+        const user = u && u.data ? u.data.user : null;
+        if(!user) return {signedIn:false, active:false};
+        const mres = await window.supabase.from("members").select("active").eq("user_id", user.id).maybeSingle();
+        return {signedIn:true, active: !!(mres && mres.data && mres.data.active)};
+      }
+    }catch(e){}
+    return {signedIn:false, active:false};
+  }
+};
+window.__access = {signedIn:false, active:false};
+
+SECTIONS.forEach(sec=>{
+  const recipes = RECIPES.filter(r=>r.cat===sec.id);
+  if(!recipes.length) return;
+  const section = document.createElement("section");
+  section.className = "section";
+  section.id = sec.id;
+  section.innerHTML = `
+    <div class="section-head">
+      <span class="section-num">${sec.num}</span>
+      <h2>${sec.title}</h2>
+      <span class="rule"></span>
+    </div>
+    <div class="grid"></div>`;
+  const grid = section.querySelector(".grid");
+  recipes.forEach(r=>{
+    const card = document.createElement("button");
+    card.className = "card locked";
+    card.dataset.id = r.id;
+    card.setAttribute("aria-label", `${r.name} — members only`);
+    card.innerHTML = `
+      <div class="card-top">
+        <div class="card-cat">${r.category}</div>
+        <span class="lock-pill">Members</span>
+      </div>
+      <h3>${r.name}</h3>
+      <p>${r.blurb}</p>
+      <div class="spec">
+        <span><b>${r.time}</b><i>time</i></span>
+        <span><b>${r.serves}</b><i>serves</i></span>
+        <span><b>${r.effort}</b><i>effort</i></span>
+        <span><b>${r.nutrition?r.nutrition.kcal:""}</b><i>kcal</i></span>
+      </div>`;
+    card.addEventListener("click", ()=>openRecipe(r.id));
+    grid.appendChild(card);
+  });
+  cat.appendChild(section);
+});
+
+const overlay = document.getElementById("overlay");
+const modal = document.getElementById("modal");
+let lastFocused = null;
+
+function ingHTML(list){
+  return (list||[]).map(ing=>{
+    if(ing.sub) return `<li class="sub">${ing.t}</li>`;
+    return `<li><span class="amt">${ing.a||""}</span><span>${ing.t}</span></li>`;
+  }).join("");
+}
+
+function renderModal(r){
+  const n = r.nutrition || {};
+  modal.innerHTML = `
+    <div class="modal-head">
+      <button class="close" id="closeBtn" aria-label="Close recipe">×</button>
+      <div class="card-cat">${r.category}</div>
+      <h2 id="m-title">${r.name}</h2>
+      <p>${r.blurb}</p>
+      <div class="modal-spec">
+        <div><b>${r.time}</b><i>total time</i></div>
+        <div><b>${r.serves}</b><i>serves</i></div>
+        <div><b>${r.effort}</b><i>effort</i></div>
+      </div>
+    </div>
+    <div class="modal-nutrition">
+      <span class="nut-label">Approx. per serving</span>
+      <span><b>${n.kcal||"—"}</b> kcal</span>
+      <span><b>${n.protein||0}g</b> protein</span>
+      <span><b>${n.carbs||0}g</b> carbs</span>
+      <span><b>${n.fat||0}g</b> fat</span>
+    </div>
+    <div class="modal-body">
+      <div class="ingredients">
+        <div class="block-label">Ingredients</div>
+        <ul class="ing">${ingHTML(r.ingredients)}</ul>
+      </div>
+      <div class="method">
+        <div class="block-label">Method</div>
+        <ol class="steps">${(r.steps||[]).map(s=>`<li>${s}</li>`).join("")}</ol>
+      </div>
+    </div>
+    <div class="modal-foot"><b>Cook's note —</b> ${r.note||""}</div>`;
+  const closeBtn = document.getElementById("closeBtn");
+  if(closeBtn) closeBtn.focus();
+}
+
+function promptJoin(){
+  const plan = document.querySelector(".plan");
+  location.hash = "#membership";
+  if(plan && plan.animate){ plan.animate([{transform:"scale(1)"},{transform:"scale(1.02)"},{transform:"scale(1)"}], {duration:520}); }
+}
+
+async function openRecipe(id){
+  if(!window.__access.active){ promptJoin(); return; }
+  lastFocused = document.activeElement;
+  modal.innerHTML = `<div style="padding:48px 30px;text-align:center;font-family:'Space Mono',monospace;color:var(--ink-soft)">Opening recipe…</div>`;
+  overlay.classList.add("open");
+  document.body.style.overflow = "hidden";
+  try{
+    const token = await window.AfterSix.token();
+    const res = await fetch(`${ENDPOINT_RECIPE}?id=${encodeURIComponent(id)}`, {
+      headers: { Authorization: token ? ("Bearer " + token) : "" }
+    });
+    if(res.status === 402 || res.status === 401){ closeRecipe(); promptJoin(); return; }
+    if(!res.ok){ modal.innerHTML = `<div style="padding:48px 30px;text-align:center">Couldn't open that recipe. Please try again.</div>`; return; }
+    const r = await res.json();
+    renderModal(r);
+  }catch(e){
+    modal.innerHTML = `<div style="padding:48px 30px;text-align:center">Couldn't open that recipe. Please try again.</div>`;
+  }
+}
+
+function closeRecipe(){
+  overlay.classList.remove("open");
+  document.body.style.overflow = "";
+  if(lastFocused) lastFocused.focus();
+}
+
+function applyAccess(){
+  const unlocked = window.__access.active;
+  document.querySelectorAll(".card").forEach(c=>{
+    c.classList.toggle("unlocked", unlocked);
+    c.classList.toggle("locked", !unlocked);
+    const h = c.querySelector("h3");
+    if(h) c.setAttribute("aria-label", h.textContent + (unlocked ? " — open recipe" : " — members only"));
+  });
+  const join = document.querySelector('a[href="#membership"]');
+  if(join) join.textContent = unlocked ? "Member" : "Join";
+}
+
+async function refreshAccess(){
+  try{ window.__access = await window.AfterSix.access(); }catch(e){ window.__access = {signedIn:false, active:false}; }
+  applyAccess();
+}
+refreshAccess();
+if(window.supabase && window.supabase.auth && window.supabase.auth.onAuthStateChange){
+  window.supabase.auth.onAuthStateChange(()=>refreshAccess());
+}
+
+overlay.addEventListener("click", e=>{ if(e.target===overlay) closeRecipe(); });
+document.addEventListener("keydown", e=>{ if(e.key==="Escape" && overlay.classList.contains("open")) closeRecipe(); });
+modal.addEventListener("click", e=>{ if(e.target.id==="closeBtn") closeRecipe(); });
+
+</script>
+<style>
+  .ax-launch{position:fixed;right:22px;bottom:22px;z-index:200;background:var(--green);color:#FCFAF3;border:none;cursor:pointer;font-family:"Space Mono",monospace;font-size:13px;letter-spacing:.04em;padding:14px 20px;border-radius:999px;box-shadow:0 12px 30px -12px rgba(0,0,0,.5)}
+  .ax-launch:hover,.ax-launch:focus-visible{background:var(--green-deep);outline:2px solid var(--saffron);outline-offset:2px}
+  .ax-panel{position:fixed;right:22px;bottom:22px;z-index:201;width:min(380px,calc(100vw - 32px));height:min(540px,calc(100vh - 44px));display:none;flex-direction:column;background:var(--paper-2);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 30px 80px -30px rgba(0,0,0,.6);font-family:"Newsreader",Georgia,serif}
+  .ax-panel.open{display:flex}
+  .ax-head{background:var(--green);color:#FCFAF3;padding:14px 18px;display:flex;justify-content:space-between;align-items:center}
+  .ax-head b{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:17px;display:block}
+  .ax-head .ax-count{font-family:"Space Mono",monospace;font-size:10.5px;letter-spacing:.06em;color:var(--saffron);text-transform:uppercase}
+  .ax-close{background:none;border:none;color:#FCFAF3;font-size:22px;cursor:pointer;line-height:1}
+  .ax-log{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:12px}
+  .ax-msg{max-width:85%;padding:10px 14px;border-radius:14px;font-size:15px;line-height:1.45;white-space:pre-wrap}
+  .ax-msg.user{align-self:flex-end;background:var(--green);color:#FCFAF3;border-bottom-right-radius:4px}
+  .ax-msg.bot{align-self:flex-start;background:var(--paper);color:var(--ink);border:1px solid var(--line);border-bottom-left-radius:4px}
+  .ax-msg.bot.typing{color:var(--ink-soft);font-style:italic}
+  .ax-msg .ax-join{display:inline-block;margin-top:8px;background:var(--saffron);color:var(--green-deep);text-decoration:none;font-family:"Space Mono",monospace;font-size:12px;font-weight:700;padding:7px 12px;border-radius:8px}
+  .ax-form{display:flex;gap:8px;padding:14px;border-top:1px solid var(--line)}
+  .ax-input{flex:1;border:1px solid var(--line-strong);border-radius:10px;padding:10px 12px;font-family:inherit;font-size:15px;background:#fff;color:var(--ink)}
+  .ax-input:focus{outline:2px solid var(--saffron);outline-offset:0}
+  .ax-send{background:var(--saffron);color:var(--green-deep);border:none;border-radius:10px;padding:0 16px;font-family:"Space Mono",monospace;font-weight:700;font-size:13px;cursor:pointer}
+  .ax-send:disabled{opacity:.5;cursor:default}
+</style>
+
+<button class="ax-launch" id="axLaunch">Ask the kitchen</button>
+
+<div class="ax-panel" id="axPanel" role="dialog" aria-label="Recipe assistant">
+  <div class="ax-head">
+    <div><b>Kitchen assistant</b><span class="ax-count" id="axCount">100 chats / month included</span></div>
+    <button class="ax-close" id="axCloseBtn" aria-label="Close">×</button>
+  </div>
+  <div class="ax-log" id="axLog">
+    <div class="ax-msg bot">Hello — ask me anything about the recipes here. What to cook tonight, what's in a dish, how long it takes…</div>
+  </div>
+  <div class="ax-form">
+    <input class="ax-input" id="axInput" placeholder="e.g. what's quick and vegetarian?" autocomplete="off">
+    <button class="ax-send" id="axSendBtn">Send</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  var ENDPOINT = "/api/recipe-assistant";
+  var CAP = 100;
+  var panel = document.getElementById("axPanel");
+  var launch = document.getElementById("axLaunch");
+  var log = document.getElementById("axLog");
+  var input = document.getElementById("axInput");
+  var sendBtn = document.getElementById("axSendBtn");
+  var countEl = document.getElementById("axCount");
+  var history = [];
+
+  function open(){ panel.classList.add("open"); launch.style.display="none"; input.focus(); }
+  function close(){ panel.classList.remove("open"); launch.style.display=""; }
+  launch.addEventListener("click", open);
+  document.getElementById("axCloseBtn").addEventListener("click", close);
+
+  function bubble(text, who, html){
+    var el = document.createElement("div");
+    el.className = "ax-msg " + who;
+    if(html){ el.innerHTML = text; } else { el.textContent = text; }
+    log.appendChild(el);
+    log.scrollTop = log.scrollHeight;
+    return el;
+  }
+
+  function setCount(used){
+    if(typeof used === "number"){ countEl.textContent = (CAP - used) + " of " + CAP + " left this month"; }
+  }
+
+  // If a Supabase client is on the page, grab the member's login token.
+  async function authToken(){
+    try{
+      if(window.supabase && window.supabase.auth){
+        var s = await window.supabase.auth.getSession();
+        return s && s.data && s.data.session ? s.data.session.access_token : "";
+      }
+    }catch(e){}
+    return "";
+  }
+
+  async function send(){
+    var text = input.value.trim();
+    if(!text) return;
+    input.value = "";
+    bubble(text, "user");
+    history.push({ role:"user", content:text });
+
+    sendBtn.disabled = true;
+    var typing = bubble("…", "bot"); typing.classList.add("typing");
+
+    try{
+      var token = await authToken();
+      var res = await fetch(ENDPOINT, {
+        method:"POST",
+        headers: { "Content-Type":"application/json", "Authorization": token ? ("Bearer " + token) : "" },
+        body: JSON.stringify({ messages: history })
+      });
+      var data = await res.json();
+      typing.remove();
+
+      if(res.status === 401){
+        bubble("Sign in as a member to chat with the kitchen assistant. <a class='ax-join' href='#membership'>See membership</a>", "bot", true);
+      } else if(res.status === 429){
+        bubble(data.error || "You've used all 100 chats this month.", "bot");
+        setCount(CAP);
+      } else if(data.reply){
+        bubble(data.reply, "bot");
+        history.push({ role:"assistant", content:data.reply });
+        setCount(data.used);
+      } else {
+        bubble(data.error || "Sorry, I didn't catch that.", "bot");
+      }
+    }catch(e){
+      typing.remove();
+      bubble("I couldn't reach the kitchen just now — try again in a moment.", "bot");
+    }finally{
+      sendBtn.disabled = false;
+      input.focus();
+    }
+  }
+
+  sendBtn.addEventListener("click", send);
+  input.addEventListener("keydown", function(e){ if(e.key==="Enter") send(); });
+
+  // Membership button — wire window.startCheckout to your Stripe Checkout call.
+  document.querySelectorAll(".cta[data-plan]").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var plan = btn.getAttribute("data-plan");
+      if(typeof window.startCheckout === "function"){ window.startCheckout(plan, window.__region || "UK"); }
+      else { console.log("Define window.startCheckout(plan, region) for Stripe Checkout. plan =", plan, "region =", window.__region); }
+    });
+  });
+})();
+</script>
+
+<script>
+// ---- Weekly plans ----
+(function(){
+  const grid = document.getElementById("plansGrid");
+  if(!grid || typeof PLANS === "undefined") return;
+
+  PLANS.forEach(function(p){
+    const card = document.createElement("button");
+    card.className = "card plan-card";
+    card.setAttribute("aria-label", "View " + p.title);
+    card.innerHTML =
+      '<div class="card-top"><div class="card-cat">' + p.tag + '</div></div>' +
+      '<h3>' + p.title + '</h3>' +
+      '<p>' + p.blurb + '</p>' +
+      '<div class="spec">' +
+        '<span><b>7</b><i>days</i></span>' +
+        '<span><b>21</b><i>meals</i></span>' +
+        '<span><b>~' + p.avgKcal + '</b><i>kcal/day</i></span>' +
+      '</div>';
+    card.addEventListener("click", function(){ openPlan(p.id); });
+    grid.appendChild(card);
+  });
+
+  function openPlan(id){
+    const p = PLANS.find(function(x){ return x.id === id; });
+    if(!p) return;
+    const overlay = document.getElementById("overlay");
+    const modal = document.getElementById("modal");
+    let html =
+      '<div class="modal-head">' +
+        '<button class="close" id="closeBtn" aria-label="Close">×</button>' +
+        '<div class="card-cat">' + p.tag + ' · 7-day plan</div>' +
+        '<h2 id="m-title">' + p.title + '</h2>' +
+        '<p>' + p.blurb + '</p>' +
+      '</div>' +
+      '<div class="plan-week">';
+    p.days.forEach(function(d){
+      html += '<div class="plan-day">' +
+        '<div class="plan-day-head"><span class="pd-name">' + d.day + '</span><span class="pd-kcal">~' + d.dayKcal + ' kcal</span></div>';
+      d.slots.forEach(function(s){
+        html += '<button class="plan-meal" data-id="' + s.id + '">' +
+          '<span class="pm-slot">' + s.slot + '</span>' +
+          '<span class="pm-name">' + s.name + '</span>' +
+          '<span class="pm-kcal">' + s.kcal + '</span>' +
+        '</button>';
+      });
+      html += '</div>';
+    });
+    html += '</div>' +
+      '<div class="modal-foot"><b>Daily totals are from the three meals</b> — approximate, before any snacks or sides.</div>';
+    modal.innerHTML = html;
+    overlay.classList.add("open");
+    document.body.style.overflow = "hidden";
+    const closeBtn = document.getElementById("closeBtn");
+    if(closeBtn){ closeBtn.focus(); closeBtn.addEventListener("click", closeRecipe); }
+    modal.querySelectorAll(".plan-meal").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        const rid = btn.getAttribute("data-id");
+        closeRecipe();
+        openRecipe(rid);
+      });
+    });
+  }
+
+  window.openPlan = openPlan;
+})();
+
+</script>
+<script>
+(function(){
+  var REGIONS = {
+    UK: { symbol:"\u00a3", monthly:"8.99", annual:"107.88" },
+    US: { symbol:"$", monthly:"11.99", annual:"143.88" },
+    EU: { symbol:"\u20ac", monthly:"10.99", annual:"131.88" }
+  };
+  function detect(){
+    var l=(navigator.language||"").toUpperCase();
+    if(l.indexOf("US")>-1) return "US";
+    if(l.indexOf("GB")>-1) return "UK";
+    if(l) return "EU";
+    return "UK";
+  }
+  function setRegion(r){
+    if(!REGIONS[r]) r="UK";
+    window.__region=r; var x=REGIONS[r];
+    document.querySelectorAll('[data-price="monthly"]').forEach(function(e){e.textContent=x.symbol+x.monthly;});
+    document.querySelectorAll('[data-price="annual"]').forEach(function(e){e.textContent=x.symbol+x.annual;});
+    document.querySelectorAll('[data-price="annualPerMonth"]').forEach(function(e){e.textContent=x.symbol+x.perMonth;});
+    document.querySelectorAll(".region-switch button").forEach(function(b){b.classList.toggle("on",b.getAttribute("data-region")===r);});
+  }
+  document.querySelectorAll(".region-switch button").forEach(function(b){
+    b.addEventListener("click",function(){setRegion(b.getAttribute("data-region"));});
+  });
+  setRegion(detect());
+  window.setRegion=setRegion;
+})();
+</script>
+<style>
+  .hx-launch{position:fixed;left:22px;bottom:22px;z-index:200;background:var(--paper-2);color:var(--green);border:1px solid var(--line-strong);cursor:pointer;font-family:"Space Mono",monospace;font-size:13px;letter-spacing:.04em;padding:13px 18px;border-radius:999px;box-shadow:0 12px 30px -14px rgba(0,0,0,.4)}
+  .hx-launch:hover,.hx-launch:focus-visible{border-color:var(--green);outline:2px solid var(--saffron);outline-offset:2px}
+  .hx-panel{position:fixed;left:22px;bottom:22px;z-index:201;width:min(360px,calc(100vw - 32px));height:min(500px,calc(100vh - 44px));display:none;flex-direction:column;background:var(--paper-2);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 30px 80px -30px rgba(0,0,0,.6);font-family:"Newsreader",Georgia,serif}
+  .hx-panel.open{display:flex}
+  .hx-head{background:var(--green-deep);color:#FCFAF3;padding:14px 18px;display:flex;justify-content:space-between;align-items:center}
+  .hx-head b{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:16px;display:block}
+  .hx-head span{font-family:"Space Mono",monospace;font-size:10.5px;letter-spacing:.06em;color:var(--saffron);text-transform:uppercase}
+  .hx-close{background:none;border:none;color:#FCFAF3;font-size:22px;cursor:pointer;line-height:1}
+  .hx-log{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:11px}
+  .hx-msg{max-width:86%;padding:10px 13px;border-radius:13px;font-size:14.5px;line-height:1.45;white-space:pre-wrap}
+  .hx-msg.user{align-self:flex-end;background:var(--green);color:#FCFAF3;border-bottom-right-radius:4px}
+  .hx-msg.bot{align-self:flex-start;background:var(--paper);color:var(--ink);border:1px solid var(--line);border-bottom-left-radius:4px}
+  .hx-msg.bot.typing{color:var(--ink-soft);font-style:italic}
+  .hx-form{display:flex;gap:8px;padding:13px;border-top:1px solid var(--line)}
+  .hx-input{flex:1;border:1px solid var(--line-strong);border-radius:10px;padding:10px 12px;font-family:inherit;font-size:14.5px;background:#fff;color:var(--ink)}
+  .hx-input:focus{outline:2px solid var(--saffron);outline-offset:0}
+  .hx-send{background:var(--green);color:#FCFAF3;border:none;border-radius:10px;padding:0 15px;font-family:"Space Mono",monospace;font-weight:700;font-size:13px;cursor:pointer}
+  .hx-send:disabled{opacity:.5;cursor:default}
+  @media(max-width:560px){.hx-launch{left:14px;bottom:14px}.hx-panel{left:14px;bottom:14px}}
+</style>
+
+<button class="hx-launch" id="hxLaunch">Help</button>
+
+<div class="hx-panel" id="hxPanel" role="dialog" aria-label="Help and support">
+  <div class="hx-head">
+    <div><b>Help &amp; support</b><span>How it works · billing · account</span></div>
+    <button class="hx-close" id="hxCloseBtn" aria-label="Close">×</button>
+  </div>
+  <div class="hx-log" id="hxLog">
+    <div class="hx-msg bot">Hi — ask me anything about After Six: how membership works, pricing, billing or using the site. (For recipe questions, use the kitchen assistant on the right.)</div>
+  </div>
+  <div class="hx-form">
+    <input class="hx-input" id="hxInput" placeholder="e.g. how much is it and can I cancel?" autocomplete="off">
+    <button class="hx-send" id="hxSendBtn">Send</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  var ENDPOINT = "/api/help-assistant";
+  var panel = document.getElementById("hxPanel");
+  var launch = document.getElementById("hxLaunch");
+  var log = document.getElementById("hxLog");
+  var input = document.getElementById("hxInput");
+  var sendBtn = document.getElementById("hxSendBtn");
+  var history = [];
+
+  launch.addEventListener("click", function(){ panel.classList.add("open"); launch.style.display="none"; input.focus(); });
+  document.getElementById("hxCloseBtn").addEventListener("click", function(){ panel.classList.remove("open"); launch.style.display=""; });
+
+  function bubble(text, who){
+    var el = document.createElement("div");
+    el.className = "hx-msg " + who;
+    el.textContent = text;
+    log.appendChild(el);
+    log.scrollTop = log.scrollHeight;
+    return el;
+  }
+
+  async function send(){
+    var text = input.value.trim();
+    if(!text) return;
+    input.value = "";
+    bubble(text, "user");
+    history.push({ role:"user", content:text });
+    sendBtn.disabled = true;
+    var typing = bubble("…", "bot"); typing.classList.add("typing");
+    try{
+      var res = await fetch(ENDPOINT, { method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify({ messages: history }) });
+      var data = await res.json();
+      typing.remove();
+      var answer = data.reply || data.error || "Sorry, I didn't catch that.";
+      bubble(answer, "bot");
+      if(data.reply) history.push({ role:"assistant", content:data.reply });
+    }catch(e){
+      typing.remove();
+      bubble("I couldn't reach support just now — please try again, or email support@aftersixco.com.", "bot");
+    }finally{
+      sendBtn.disabled = false;
+      input.focus();
+    }
+  }
+
+  sendBtn.addEventListener("click", send);
+  input.addEventListener("keydown", function(e){ if(e.key==="Enter") send(); });
+})();
+</script>
+
+</body>
+</html>
