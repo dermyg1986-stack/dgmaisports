@@ -5,12 +5,12 @@ import styles from "./page.module.css";
 type Message = { role: "user" | "assistant"; content: string };
 
 const QUICK_PROMPTS = [
-  { label: "Pre-Match Meal", text: "Suggest a high-carb pre-match meal I can prepare 3 hours before kick-off for a group of 15 adult footballers." },
-  { label: "Recovery Recipe", text: "Give me a high-protein post-workout recovery meal that I can make in under 20 minutes." },
-  { label: "Weekly Meal Plan", text: "Create a 5-day healthy meal plan for an athlete in a heavy training week — breakfast, lunch, and dinner." },
-  { label: "Healthy Snacks", text: "Suggest 5 nutritious snacks I can prep on Sunday to fuel training sessions throughout the week." },
-  { label: "Vegan Options", text: "I need a high-protein vegan dinner recipe suitable for a strength and conditioning athlete." },
-  { label: "Weight Management", text: "Design a satisfying but calorie-controlled dinner under 600 kcal that still supports muscle maintenance." },
+  { label: "Quick Dinner", text: "Give me a healthy, balanced dinner recipe I can make in under 30 minutes with simple ingredients." },
+  { label: "Weekly Meal Plan", text: "Create a 5-day healthy meal plan with breakfast, lunch, and dinner — I want variety and simple cooking." },
+  { label: "High Protein", text: "Suggest a high-protein lunch recipe that will keep me full for hours and is easy to meal-prep." },
+  { label: "Healthy Snacks", text: "Give me 5 nutritious snack ideas I can prepare in advance for the week." },
+  { label: "Vegan Recipe", text: "I need a delicious high-protein vegan dinner recipe that is filling and easy to cook." },
+  { label: "Low Calorie", text: "Design a satisfying dinner under 500 kcal that is packed with nutrients and doesn't feel like diet food." },
 ];
 
 function MarkdownText({ text }: { text: string }) {
@@ -116,8 +116,8 @@ export default function RecipesPage() {
         <div className={styles.logo}>
           <span className={styles.logoIcon}>🥗</span>
           <div>
-            <span className={styles.logoTitle}>DGM AI Sports</span>
-            <span className={styles.logoSub}>Recipe & Nutrition Assistant</span>
+            <span className={styles.logoTitle}>Healthy Eating Assistant</span>
+            <span className={styles.logoSub}>Recipes, nutrition & meal planning</span>
           </div>
         </div>
         <span className={styles.badge}>Powered by Claude Opus 4.8</span>
@@ -127,9 +127,9 @@ export default function RecipesPage() {
         {messages.length === 0 ? (
           <div className={styles.welcome}>
             <div className={styles.welcomeIcon}>🥦</div>
-            <h1 className={styles.welcomeTitle}>Your AI Nutrition Assistant</h1>
+            <h1 className={styles.welcomeTitle}>Your AI Recipe Assistant</h1>
             <p className={styles.welcomeText}>
-              Get personalised recipes, meal plans, and sports nutrition advice to fuel performance and support healthy eating goals.
+              Discover healthy recipes, get personalised meal plans, and learn about nutrition — just ask anything about food and healthy eating.
             </p>
             <div className={styles.quickGrid}>
               {QUICK_PROMPTS.map((q) => (
@@ -173,7 +173,7 @@ export default function RecipesPage() {
             value={input}
             onChange={(e) => { setInput(e.target.value); autoResize(); }}
             onKeyDown={handleKeyDown}
-            placeholder="Ask about recipes, nutrition, meal plans… (Enter to send, Shift+Enter for new line)"
+            placeholder="Ask about a recipe, ingredient, meal plan… (Enter to send, Shift+Enter for new line)"
             rows={1}
             disabled={loading}
           />
@@ -181,7 +181,7 @@ export default function RecipesPage() {
             {loading ? <span className={styles.spinner} /> : "Send"}
           </button>
         </div>
-        <p className={styles.footerNote}>DGM AI Sports · UK Sports Analysis & Education</p>
+        <p className={styles.footerNote}>Healthy Eating Assistant · Recipes, Nutrition & Meal Planning</p>
       </footer>
     </div>
   );
