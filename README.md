@@ -1,15 +1,18 @@
-# DGM AI Sports Coach Assistant
+# After Six — aftersixco
 
-An AI-powered coaching assistant for sports coaches, built with Next.js and Claude Opus 4.8.
+A weeknight recipe membership website, built with Next.js and powered by Claude Opus 4.8.
 
 ## Features
 
-- **Session Planning** — Generate structured training sessions tailored to your squad
-- **Match Preparation** — Tactical plans, set pieces, and opponent analysis
-- **Drill Library** — Specific drills with setup, coaching points, and progressions
-- **Player Analysis** — Performance insights and development recommendations
-- **Load Management** — Periodisation and recovery planning
-- **Streaming responses** — Real-time AI output via Claude Opus 4.8 with adaptive thinking
+- **Recipe collection** — 74+ chef-tested recipes across breakfast, lunch, dinner, healthy, smoothies, and desserts & snacks
+- **Weekly meal plans** — Ready-made 7-day plans (Balanced, High-Protein, Veggie) with per-day calories
+- **Kitchen Assistant** — A Claude-powered chat that recommends real recipes from the collection
+- **Help & Support assistant** — A Claude-powered chat for membership, billing, and account questions
+- **Membership & pricing** — Monthly / annual tiers with £ / $ / € region switching (Stripe-ready)
+
+### Assistant safety
+
+Both assistants are strictly scoped: no medical, weight-loss, or unsafe advice; mandatory allergy caution (always check the full ingredient list and cross-contamination); polite, on-topic responses only. They present as recipe/meal-planning helpers, not health experts.
 
 ## Setup
 
@@ -25,6 +28,6 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Stack
 
-- **Next.js 15** (App Router)
-- **Anthropic SDK** (`@anthropic-ai/sdk`)
-- **Claude Opus 4.8** with adaptive thinking and streaming
+- **Next.js 15** (App Router) — site served from `public/index.html`
+- **Anthropic SDK** (`@anthropic-ai/sdk`) with **Claude Opus 4.8**
+- API routes: `/api/recipe-assistant` (Kitchen Assistant), `/api/help-assistant` (Support)
