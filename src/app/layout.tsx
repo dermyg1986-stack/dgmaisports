@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://dgmaisports.com";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.drillpitch.com";
 const siteName = "DGM AI Sports";
 const title = "DGM AI Sports Coach | AI Coaching Assistant for Session Planning & Match Prep";
 const description =
