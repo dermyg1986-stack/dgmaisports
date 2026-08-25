@@ -20,7 +20,7 @@ export default function OpengraphImage() {
         }}
       >
         <div style={{ fontSize: 96, marginBottom: 24 }}>⚽</div>
-        <div style={{ fontSize: 64, fontWeight: 700, display: "flex" }}>DGM AI Sports</div>
+        <div style={{ fontSize: 64, fontWeight: 700, display: "flex" }}>DrillPitch</div>
         <div style={{ fontSize: 32, color: "#94a3b8", marginTop: 12, display: "flex" }}>
           AI Coaching Assistant for Session Planning &amp; Match Prep
         </div>
@@ -35,7 +35,7 @@ export default function OpengraphImage() {
             display: "flex",
           }}
         >
-          UK Sports Analysis &amp; Education
+          drillpitch.com
         </div>
       </div>
     ),

@@ -1,4 +1,4 @@
-# DGM AI Sports Coach Assistant
+# DrillPitch
 
 An AI-powered coaching assistant for sports coaches, built with Next.js and Claude Opus 4.8.
 
@@ -22,6 +22,12 @@ npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000).
+
+## SEO configuration
+
+- `NEXT_PUBLIC_SITE_URL` — the canonical production URL (`https://www.drillpitch.com`), used for metadata, `sitemap.xml`, and `robots.txt`.
+- `GOOGLE_SITE_VERIFICATION` — the content value from Google Search Console's "HTML tag" verification method (Settings → Ownership verification). Once set, redeploy and click "Verify" in Search Console.
+- `BING_SITE_VERIFICATION` — the equivalent verification code from Bing Webmaster Tools, if used.
 
 ## Stack
 

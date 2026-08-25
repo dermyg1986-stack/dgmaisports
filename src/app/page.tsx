@@ -4,6 +4,66 @@ import styles from "./page.module.css";
 
 type Message = { role: "user" | "assistant"; content: string };
 
+const FEATURES = [
+  {
+    title: "Session Planning",
+    text: "Generate structured training sessions with warm-ups, drills, progressions, and cool-downs tailored to your squad's age and ability.",
+  },
+  {
+    title: "Match Preparation",
+    text: "Build pre-match tactical plans, opponent scouting summaries, and team talks for your next fixture.",
+  },
+  {
+    title: "Drill Library",
+    text: "Get specific drills with setup instructions, coaching points, and variations for every skill level.",
+  },
+  {
+    title: "Player Analysis",
+    text: "Turn performance observations into clear, constructive feedback and development plans.",
+  },
+  {
+    title: "Load Management",
+    text: "Plan training cycles, recovery windows, and taper schedules to keep players fit and injury-free.",
+  },
+  {
+    title: "Set Pieces",
+    text: "Design attacking and defensive set-piece routines, from corners to free kicks.",
+  },
+];
+
+const FAQ_ITEMS = [
+  {
+    q: "What is DrillPitch?",
+    a: "DrillPitch is a free AI coaching assistant that helps football and team-sport coaches build training sessions, match-day tactics, drills, and player development plans in seconds.",
+  },
+  {
+    q: "Is DrillPitch free to use?",
+    a: "Yes. DrillPitch's coaching assistant is free to use — add your own Anthropic API key and start planning sessions, drills, and match preparation straight away.",
+  },
+  {
+    q: "What sports does DrillPitch support?",
+    a: "DrillPitch is built with football (soccer) coaching in mind but adapts to rugby, hockey, basketball, and other team sports when you specify the sport and age group.",
+  },
+  {
+    q: "How does DrillPitch create training sessions?",
+    a: "Describe your squad, focus area, and session length, and DrillPitch's AI generates a structured plan with warm-ups, drills, coaching points, and progressions suited to your players.",
+  },
+  {
+    q: "Can DrillPitch help with match preparation and set pieces?",
+    a: "Yes — DrillPitch builds tactical match-day plans, opponent scouting summaries, and specific set-piece routines such as attacking and defensive corner setups.",
+  },
+];
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: FAQ_ITEMS.map((item) => ({
+    "@type": "Question",
+    name: item.q,
+    acceptedAnswer: { "@type": "Answer", text: item.a },
+  })),
+};
+
 const QUICK_PROMPTS = [
   { label: "Session Plan", text: "Create a 90-minute training session for a semi-professional squad focused on pressing and maintaining a high defensive line." },
   { label: "Match Prep", text: "Help me prepare a match-day plan for Sunday. We're playing a team that sits deep and hits on the counter." },
@@ -111,13 +171,14 @@ export default function Home() {
   };
 
   return (
+    <>
     <div className={styles.layout}>
       <header className={styles.header}>
         <div className={styles.logo}>
           <span className={styles.logoIcon}>⚽</span>
           <div>
-            <span className={styles.logoTitle}>DGM AI Sports</span>
-            <span className={styles.logoSub}>Coach Assistant</span>
+            <span className={styles.logoTitle}>DrillPitch</span>
+            <span className={styles.logoSub}>AI Coach Assistant</span>
           </div>
         </div>
         <span className={styles.badge}>Powered by Claude Opus 4.8</span>
@@ -181,8 +242,43 @@ export default function Home() {
             {loading ? <span className={styles.spinner} /> : "Send"}
           </button>
         </div>
-        <p className={styles.footerNote}>DGM AI Sports · UK Sports Analysis & Education</p>
+        <p className={styles.footerNote}>DrillPitch · AI Coaching Assistant for Every Sport</p>
       </footer>
     </div>
+
+      <section className={styles.seoSection} aria-labelledby="features-heading">
+        <div className={styles.seoInner}>
+          <h2 id="features-heading">AI-Powered Coaching, Built for Every Level</h2>
+          <p className={styles.seoIntro}>
+            DrillPitch is a free AI coaching assistant for football and team-sport coaches. Plan
+            training sessions, prepare for match day, build drills, and analyse player performance
+            — all from a single conversation.
+          </p>
+          <div className={styles.featureGrid}>
+            {FEATURES.map((f) => (
+              <div key={f.title} className={styles.featureCard}>
+                <h3>{f.title}</h3>
+                <p>{f.text}</p>
+              </div>
+            ))}
+          </div>
+
+          <h2>Frequently Asked Questions</h2>
+          <div className={styles.faqList}>
+            {FAQ_ITEMS.map((item) => (
+              <details key={item.q} className={styles.faqItem}>
+                <summary>{item.q}</summary>
+                <p>{item.a}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
+    </>
   );
 }

@@ -2,8 +2,8 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "DGM AI Sports Coach",
-    short_name: "DGM AI Sports",
+    name: "DrillPitch",
+    short_name: "DrillPitch",
     description:
       "AI-powered coaching assistant for session planning, match preparation, and player analysis.",
     start_url: "/",

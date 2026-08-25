@@ -2,16 +2,16 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.drillpitch.com";
-const siteName = "DGM AI Sports";
-const title = "DGM AI Sports Coach | AI Coaching Assistant for Session Planning & Match Prep";
+const siteName = "DrillPitch";
+const title = "DrillPitch | AI Coaching Assistant for Session Planning & Match Prep";
 const description =
-  "DGM AI Sports Coach is a free AI-powered coaching assistant for football coaches — generate training session plans, match-day tactics, drills, player analysis, and recovery programmes in seconds.";
+  "DrillPitch is a free AI-powered coaching assistant for football coaches — generate training session plans, match-day tactics, drills, player analysis, and recovery programmes in seconds.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
     default: title,
-    template: "%s | DGM AI Sports",
+    template: "%s | DrillPitch",
   },
   description,
   keywords: [
@@ -21,13 +21,13 @@ export const metadata: Metadata = {
     "match preparation tool",
     "coaching drills generator",
     "player performance analysis",
-    "sports analysis UK",
+    "DrillPitch",
     "AI coach assistant",
   ],
   applicationName: siteName,
-  authors: [{ name: "DGM AI Sports" }],
-  creator: "DGM AI Sports",
-  publisher: "DGM AI Sports",
+  authors: [{ name: "DrillPitch" }],
+  creator: "DrillPitch",
+  publisher: "DrillPitch",
   category: "Sports",
   alternates: {
     canonical: "/",
@@ -61,6 +61,12 @@ export const metadata: Metadata = {
     apple: "/apple-icon",
   },
   manifest: "/manifest.webmanifest",
+  verification: {
+    google: process.env.GOOGLE_SITE_VERIFICATION,
+    other: process.env.BING_SITE_VERIFICATION
+      ? { "msvalidate.01": process.env.BING_SITE_VERIFICATION }
+      : undefined,
+  },
 };
 
 export const viewport: Viewport = {
@@ -74,13 +80,13 @@ const jsonLd = {
     {
       "@type": "Organization",
       "@id": `${siteUrl}/#organization`,
-      name: "DGM AI Sports",
+      name: "DrillPitch",
       url: siteUrl,
-      description: "UK sports analysis and education platform.",
+      description: "AI-powered coaching assistant for football and team-sport coaches.",
     },
     {
       "@type": "WebApplication",
-      name: "DGM AI Sports Coach",
+      name: "DrillPitch",
       url: siteUrl,
       description,
       applicationCategory: "SportsApplication",
